@@ -1,66 +1,267 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Steal Butch's Bones</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Steal Butch's Bones</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Luckiest Guy font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap"
+    rel="stylesheet"
+  >
 </head>
+
 <body>
-<section id="registerScreen" class="card">
-  <img src="images/butch_sleeping_big.png" alt="Butch sleeping" class="hero">
-  <h1>Steal Butch's Bones</h1>
-  <p class="sub">Don't wake Butch!</p>
-  <form id="registerForm" novalidate>
-    <label for="playerName">Player name</label>
-    <input type="text" id="playerName" name="playerName" placeholder="Enter your name" autocomplete="off">
-    <p class="error" id="nameError"></p>
 
-    <fieldset>
-      <legend>Choose difficulty</legend>
-      <label><input type="radio" name="difficulty" value="easy"> Easy</label>
-      <label><input type="radio" name="difficulty" value="normal"> Normal</label>
-      <label><input type="radio" name="difficulty" value="hard"> Hard</label>
-    </fieldset>
-    <p class="error" id="difficultyError"></p>
+  <!-- =========================
+       REGISTER / INTRO SCREEN
+       ========================= -->
+  <section id="registerScreen" class="card">
 
-    <label class="check"><input type="checkbox" id="agree" name="agree"> I understand that I must move carefully.</label>
-    <p class="error" id="agreeError"></p>
+    <img
+      src="images/butch_sleeping_big.png"
+      alt="Butch sleeping"
+      class="hero"
+    >
 
-    <button type="submit" class="btn">Start game</button>
-    <p class="success" id="formSuccess" role="status"></p>
-  </form>
-</section>
+    <h1>Steal Butch's Bones</h1>
 
-<section id="gameScreen" class="card hidden">
-  <div class="hud">
-    <div>Player<b id="hudName">-</b></div>
-    <div>Score<b id="hudScore">0</b></div>
-    <div>Bones<b id="hudBones">0/8</b></div>
-    <div>Time<b id="hudTime">0</b></div>
-  </div>
-  <div id="arena">
-    <p class="tip">Hold the mouse button and move the bone slowly to the basket.</p>
-    <img id="butch" src="images/butch_sleeping.png" alt="Butch">
-    <div id="bowl"><span>Butch's bowl</span></div>
-    <div id="basket">🧺<span>Drop bones here</span></div>
-  </div>
-  <div class="meter">
-    <img id="butchHead" src="images/butch_head_sleeping.png" alt="">
-    <div class="meterBody">
-      <div class="meterTop"><span>Wake meter</span><b id="wakeText">0%</b></div>
-      <div class="track"><div id="wakeFill"></div></div>
-      <small id="wakeMsg">Butch is sleeping...</small>
+    <p class="sub">Don't wake Butch!</p>
+
+    <form id="registerForm" novalidate>
+
+      <label for="playerName">Player name</label>
+
+      <input
+        type="text"
+        id="playerName"
+        name="playerName"
+        placeholder="Enter your name"
+        autocomplete="off"
+      >
+
+      <p class="error" id="nameError"></p>
+
+
+      <fieldset>
+
+        <legend>Choose difficulty</legend>
+
+        <label>
+          <input
+            type="radio"
+            name="difficulty"
+            value="easy"
+          >
+          Easy
+        </label>
+
+        <label>
+          <input
+            type="radio"
+            name="difficulty"
+            value="normal"
+          >
+          Normal
+        </label>
+
+        <label>
+          <input
+            type="radio"
+            name="difficulty"
+            value="hard"
+          >
+          Hard
+        </label>
+
+      </fieldset>
+
+      <p class="error" id="difficultyError"></p>
+
+
+      <label class="check">
+
+        <input
+          type="checkbox"
+          id="agree"
+          name="agree"
+        >
+
+        I understand that I must move carefully.
+
+      </label>
+
+      <p class="error" id="agreeError"></p>
+
+
+      <button
+        type="submit"
+        class="btn"
+      >
+        Start Game
+      </button>
+
+      <p
+        class="success"
+        id="formSuccess"
+        role="status"
+      ></p>
+
+    </form>
+
+  </section>
+
+
+  <!-- =========================
+       GAME SCREEN
+       ========================= -->
+  <section
+    id="gameScreen"
+    class="card hidden"
+  >
+
+    <!-- HUD -->
+    <div class="hud">
+
+      <div>
+        Player
+        <b id="hudName">-</b>
+      </div>
+
+      <div>
+        Score
+        <b id="hudScore">0</b>
+      </div>
+
+      <div>
+        Bones
+        <b id="hudBones">0/8</b>
+      </div>
+
+      <div>
+        Time
+        <b id="hudTime">0</b>
+      </div>
+
     </div>
-  </div>
-  <button id="quitBtn" class="btn gray">Quit game</button>
-  <button id="muteBtn" class="btn gray">🔊 Sound on</button>
-  <div id="result" class="hidden"><div class="box">
-    <h2 id="resultTitle"></h2><p id="resultText"></p>
-    <button id="restartBtn" class="btn">Play again</button>
-  </div></div>
-</section>
-<script src="sounds.js"></script>
-<script src="script.js"></script>
+
+
+    <!-- GAME ARENA -->
+    <div id="arena">
+
+      <p class="tip">
+        Hold the mouse button and move the bone slowly to the basket.
+      </p>
+
+      <img
+        id="butch"
+        src="images/butch_sleeping.png"
+        alt="Butch"
+      >
+
+      <div id="bowl">
+        <span>Butch's bowl</span>
+      </div>
+
+      <div id="basket">
+        🧺
+        <span>Drop bones here</span>
+      </div>
+
+    </div>
+
+
+    <!-- WAKE METER -->
+    <div class="meter">
+
+      <img
+        id="butchHead"
+        src="images/butch_head_sleeping.png"
+        alt=""
+      >
+
+      <div class="meterBody">
+
+        <div class="meterTop">
+
+          <span>Wake meter</span>
+
+          <b id="wakeText">0%</b>
+
+        </div>
+
+        <div class="track">
+
+          <div id="wakeFill"></div>
+
+        </div>
+
+        <small id="wakeMsg">
+          Butch is sleeping...
+        </small>
+
+      </div>
+
+    </div>
+
+
+    <!-- GAME CONTROLS -->
+    <button
+      id="quitBtn"
+      class="btn gray"
+    >
+      Quit Game
+    </button>
+
+    <button
+      id="muteBtn"
+      class="btn gray"
+    >
+      🔊 Sound on
+    </button>
+
+
+    <!-- RESULT SCREEN -->
+    <div
+      id="result"
+      class="hidden"
+    >
+
+      <div class="box">
+
+        <h2 id="resultTitle"></h2>
+
+        <p id="resultText"></p>
+
+        <button
+          id="restartBtn"
+          class="btn"
+        >
+          Play Again
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       JAVASCRIPT
+       ========================= -->
+
+  <!-- Sound system MUST load before script.js -->
+  <script src="sounds.js"></script>
+
+  <!-- Main game logic -->
+  <script src="script.js"></script>
+
 </body>
 </html>

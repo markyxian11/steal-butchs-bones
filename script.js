@@ -29,6 +29,72 @@ const form = $("registerForm"), nameInput = $("playerName");
 const arena = $("arena"), basket = $("basket"), bowl = $("bowl");
 let state = null;
 
+/* ===== AUDIO CONFIG & STATE ===== */
+const BGM_VOLUME = 0.3;
+const INTRO_VOLUME = 0.3;
+
+const bgm = new Audio("sounds/game_bg.mp3");
+bgm.loop = true;
+bgm.volume = BGM_VOLUME;
+bgm.preload = "auto";
+
+const intro = new Audio("sounds/intro.mp3");
+intro.loop = true;
+intro.volume = INTRO_VOLUME;
+intro.preload = "auto";
+
+let activeTrack = null; // 'intro' | 'bgm' | null
+let bgmMuted = false;
+
+/* ===== BGM CONTROL ===== */
+function bgmPlay() {
+  introStop(); // Prevent overlapping music
+  activeTrack = 'bgm';
+  bgm.muted = bgmMuted;
+  bgm.currentTime = 0;
+  bgm.play().catch(() => {});
+}
+
+function bgmStop() {
+  if (activeTrack === 'bgm') activeTrack = null;
+  bgm.pause();
+}
+
+/* ===== INTRO MUSIC CONTROL ===== */
+function introPlay() {
+  bgmStop(); // Prevent overlapping music
+  activeTrack = 'intro';
+  intro.muted = bgmMuted;
+  intro.currentTime = 0;
+  intro.play().catch(() => {});
+}
+
+function introStop() {
+  if (activeTrack === 'intro') activeTrack = null;
+  intro.pause();
+}
+
+/* ===== MUTE / UNMUTE HELPER ===== */
+function toggleMute(muted = !bgmMuted) {
+  bgmMuted = muted;
+  bgm.muted = bgmMuted;
+  intro.muted = bgmMuted;
+  return bgmMuted;
+}
+
+/* ===== BROWSER AUTOPLAY UNLOCK ===== */
+function handleFirstInteraction() {
+  if (activeTrack === 'intro' && intro.paused) {
+    intro.play().catch(() => {});
+  } else if (activeTrack === 'bgm' && bgm.paused) {
+    bgm.play().catch(() => {});
+  }
+}
+
+["pointerdown", "keydown"].forEach(ev => 
+  document.addEventListener(ev, handleFirstInteraction)
+);
+
 /* ===== REGISTRATION FORM ===== */
 function showError(id, msg, input) {
   $(id).textContent = msg;
@@ -81,6 +147,8 @@ function startGame(player) {
   clearInterval(state.timer);
   state.timer = setInterval(tick, 100);
   Sound.init(); Sound.snoreOn();
+  introStop();
+  bgmPlay();
 }
 
 function spawnBones() {
@@ -190,6 +258,8 @@ function endGame(win, reason) {
   state.over = true; clearInterval(state.timer);
   if (state.drag) state.drag.el.classList.remove("drag");
   Sound.snoreOff();
+  bgmStop();
+  introPlay();
   if (win) Sound.play("win"); else if (reason !== "Butch woke up!") Sound.play("lose");
   const bonus = win ? Math.ceil(state.time) : 0;
   $("resultTitle").textContent = win ? "You stole all the bones!" : reason;
@@ -201,7 +271,7 @@ function endGame(win, reason) {
 
 $("restartBtn").addEventListener("click", () => startGame(state.player));
 $("quitBtn").addEventListener("click", () => {
-  clearInterval(state.timer); state.over = true; Sound.stopAll();
+  clearInterval(state.timer); state.over = true; Sound.stopAll(); bgmStop(); introPlay();
   $("gameScreen").classList.add("hidden");
   $("registerScreen").classList.remove("hidden");
   $("formSuccess").textContent = "";
@@ -209,6 +279,10 @@ $("quitBtn").addEventListener("click", () => {
 
 $("muteBtn").addEventListener("click", () => {
   const m = Sound.toggleMute();
+  bgmMuted = m; bgm.muted = m; intro.muted = m;
   $("muteBtn").textContent = m ? "🔇 Sound off" : "🔊 Sound on";
   if (!m && state && !state.over && state.stage === 0) Sound.snoreOn();
 });
+
+/* start the intro on the register screen when the page loads */
+introPlay();
