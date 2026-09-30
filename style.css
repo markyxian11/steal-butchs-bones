@@ -1,15 +1,5 @@
-/* =========================================================
-   GLOBAL
-   ========================================================= */
 @import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap');
 
-* {
-    box-sizing: border-box;
-    font-family: "Luckiest Guy", cursive;
-    font-size: 18px;
-    letter-spacing: 1.2px;
-
-}
 * {
     box-sizing: border-box;
 }
@@ -21,14 +11,15 @@ body {
     display: grid;
     place-items: center;
 
-    background: #f4e8d3;
-
     padding: 16px;
- 
+
+    background: #f4e8d3;
+    color: #1f2a44;
+
     font-family: "Luckiest Guy", cursive;
-     color: #1f2a44;
     font-size: 18px;
     letter-spacing: 1.2px;
+}
 
 h1,
 h2,
@@ -42,39 +33,37 @@ small,
 b {
     letter-spacing: 1.2px;
 }
-}
-
-
-/* =========================================================
-   GENERAL CARD
-   ========================================================= */
-
-.card {
-   position: relative;
-    width: 100%;
-    max-width: 1050px;
-
-    background: #fff9ee;
-
-    border-radius: 24px;
-
-    padding: 28px;
-
-    box-shadow: 0 12px 40px #0002;
-}
 
 .hidden {
     display: none !important;
 }
 
 
-/* =========================================================
-   REGISTRATION SCREEN
-   ========================================================= */
+/* =========================
+   CARD
+   ========================= */
 
-#registerScreen {
+.card {
     position: relative;
 
+    width: 100%;
+    max-width: 1050px;
+
+    padding: 28px;
+
+    background: #fff9ee;
+
+    border-radius: 24px;
+
+    box-shadow: 0 12px 40px #0002;
+}
+
+
+/* =========================
+   MAIN MENU
+   ========================= */
+
+#registerScreen {
     width: 70vw;
     max-width: 700px;
 
@@ -85,18 +74,12 @@ b {
     background: #fff9ee;
 
     border: 4px solid #d3bd94;
-
     border-radius: 28px;
 
     text-align: center;
 
     box-shadow: 0 12px 40px #0002;
 }
-
-
-/* =========================================================
-   BUTCH IMAGE
-   ========================================================= */
 
 .hero {
     position: absolute;
@@ -107,17 +90,10 @@ b {
     width: 300px;
     max-width: 55%;
 
-    height: auto;
-
     transform: translateX(-50%);
 
     z-index: 2;
 }
-
-
-/* =========================================================
-   REGISTRATION TITLE
-   ========================================================= */
 
 h1 {
     margin: 0;
@@ -125,10 +101,7 @@ h1 {
     color: #14235a;
 
     font-size: 2.2rem;
-
     line-height: 1.2;
-
-    letter-spacing: 1px;
 }
 
 .sub {
@@ -140,9 +113,9 @@ h1 {
 }
 
 
-/* =========================================================
+/* =========================
    FORM
-   ========================================================= */
+   ========================= */
 
 form {
     text-align: center;
@@ -158,11 +131,6 @@ label {
     font-weight: bold;
 }
 
-
-/* =========================================================
-   PLAYER NAME INPUT
-   ========================================================= */
-
 input[type="text"] {
     width: 80%;
     max-width: 450px;
@@ -172,7 +140,6 @@ input[type="text"] {
     margin-top: 8px;
 
     border: 3px solid #d3bd94;
-
     border-radius: 10px;
 
     background: #f4e8d3;
@@ -201,9 +168,9 @@ input.invalid {
 }
 
 
-/* =========================================================
+/* =========================
    DIFFICULTY
-   ========================================================= */
+   ========================= */
 
 fieldset {
     border: 0;
@@ -232,11 +199,6 @@ fieldset label,
     font-weight: normal;
 }
 
-
-/* =========================================================
-   CHECKBOX
-   ========================================================= */
-
 .check {
     display: block;
 
@@ -246,9 +208,9 @@ fieldset label,
 }
 
 
-/* =========================================================
-   ERROR / SUCCESS MESSAGES
-   ========================================================= */
+/* =========================
+   MESSAGES
+   ========================= */
 
 .error {
     color: #c62828;
@@ -271,9 +233,9 @@ fieldset label,
 }
 
 
-/* =========================================================
+/* =========================
    BUTTONS
-   ========================================================= */
+   ========================= */
 
 .btn {
     width: 80%;
@@ -284,16 +246,13 @@ fieldset label,
     padding: 14px 20px;
 
     border: 0;
-
     border-radius: 12px;
 
     background: #14235a;
-
     color: #f5c542;
 
-    font-weight: bold;
-
     font-size: 1.1rem;
+    font-weight: bold;
 
     cursor: pointer;
 
@@ -318,11 +277,11 @@ fieldset label,
 .btn.gray {
     width: auto;
 
+    padding: 10px 18px;
+
     background: #8a8a8a;
 
-    color: #fff;
-
-    padding: 10px 18px;
+    color: white;
 
     box-shadow: 0 3px 0 #666;
 }
@@ -332,24 +291,25 @@ fieldset label,
 }
 
 
-/* =========================================================
+/* =========================
    GAME HUD
-   ========================================================= */
+   ========================= */
 
 .hud {
     display: flex;
 
     justify-content: space-between;
+    align-items: center;
 
     gap: 12px;
 
     flex-wrap: wrap;
 
+    padding: 12px 20px;
+
     background: #ead9b8;
 
     border-radius: 14px;
-
-    padding: 12px 20px;
 
     font-size: 0.8rem;
 }
@@ -360,39 +320,123 @@ fieldset label,
     font-size: 1.4rem;
 }
 
+.comboHud b {
+    color: #d35400;
+}
 
-/* =========================================================
-   GAME ARENA
-   ========================================================= */
+
+/* =========================
+   COMBO
+   ========================= */
+
+.comboBox {
+    width: 280px;
+
+    margin: 10px auto 0;
+
+    padding: 8px 14px;
+
+    border-radius: 12px;
+
+    background: #ead9b8;
+
+    text-align: center;
+
+    opacity: 0.65;
+
+    transform: scale(0.95);
+
+    transition:
+        opacity 0.2s,
+        transform 0.2s;
+}
+
+.comboBox.active {
+    opacity: 1;
+
+    transform: scale(1);
+
+    animation: comboPulse 0.65s infinite alternate;
+}
+
+#comboText {
+    color: #d35400;
+
+    font-size: 1.05rem;
+
+    margin-bottom: 5px;
+}
+
+.comboTimer {
+    height: 7px;
+
+    background: #ddd;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+}
+
+#comboTimerFill {
+    height: 100%;
+
+    width: 0;
+
+    background: #f0b400;
+
+    transition: width 0.1s linear;
+}
+
+@keyframes comboPulse {
+    from {
+        transform: scale(1);
+    }
+
+    to {
+        transform: scale(1.06);
+    }
+}
+
+
+/* =========================
+   ARENA
+   ========================= */
 
 #arena {
-     position: relative;
+    position: relative;
+
     height: 470px;
+
     margin-top: 14px;
+
     border: 3px solid #d3bd94;
     border-radius: 18px;
+
     background: #fdf6e8;
+
     overflow: hidden;
+
     touch-action: none;
+
     user-select: none;
 }
 
 .tip {
-    text-align: center;
-
-    font-size: 0.85rem;
-
-    margin: 8px 0;
-
     position: relative;
 
     z-index: 1;
+
+    margin: 8px 0;
+
+    text-align: center;
+
+    font-size: 0.85rem;
 }
 
 
-/* =========================================================
-   BUTCH INSIDE GAME
-   ========================================================= */
+/* =========================
+   BUTCH
+   ========================= */
 
 #butch {
     position: absolute;
@@ -404,13 +448,43 @@ fieldset label,
 
     transform: translateX(-50%);
 
-    pointer-events: none;
+    pointer-events: auto;
+
+    cursor: pointer;
+
+    z-index: 3;
+}
+
+#butch:hover {
+    filter: brightness(1.06);
+}
+
+.butchHit {
+    animation: butchHit 0.45s ease;
+}
+
+@keyframes butchHit {
+    0% {
+        transform: translateX(-50%) scale(1);
+    }
+
+    25% {
+        transform: translateX(-50%) scale(1.08) rotate(-3deg);
+    }
+
+    50% {
+        transform: translateX(-50%) scale(1.08) rotate(3deg);
+    }
+
+    100% {
+        transform: translateX(-50%) scale(1);
+    }
 }
 
 
-/* =========================================================
+/* =========================
    BOWL
-   ========================================================= */
+   ========================= */
 
 #bowl {
     position: absolute;
@@ -430,95 +504,207 @@ fieldset label,
     box-shadow: inset 0 8px #0002;
 }
 
-#bowl span,
-#basket span {
+#bowl span {
     position: absolute;
-
-    bottom: -20px;
 
     left: 0;
     right: 0;
+    bottom: 6px;
+
+    color: #fff8;
 
     text-align: center;
 
     font-size: 0.7rem;
-
     font-weight: bold;
 }
 
-#bowl span {
-    bottom: 6px;
 
-    color: #fff8;
-}
-
-
-/* =========================================================
+/* =========================
    BASKET
-   ========================================================= */
+   ========================= */
 
 #basket {
-     position: absolute;
+    position: absolute;
+
     right: 24px;
     bottom: 32px;
+
     width: 125px;
     height: 105px;
-    background: #c68a4a;
-    border: 4px solid #8d5a2b;
-    border-radius: 16px;
+
     display: grid;
     place-items: center;
+
+    background: #c68a4a;
+
+    border: 4px solid #8d5a2b;
+    border-radius: 16px;
+
     font-size: 2.8rem;
 }
 
 #basket span {
     position: absolute;
-    bottom: -32px;
+
     left: 50%;
-    transform: translateX(-50%);
+    bottom: -32px;
+
     width: 150px;
+
+    transform: translateX(-50%);
+
     text-align: center;
+
     font-size: 0.75rem;
+
     line-height: 1.1;
+
     font-weight: bold;
 }
 
 
-/* =========================================================
+/* =========================
    BONES
-   ========================================================= */
+   ========================= */
 
 .bone {
     position: absolute;
 
-    cursor: grab;
-
     z-index: 5;
+
+    cursor: grab;
 
     touch-action: none;
 
+    user-select: none;
+
     -webkit-user-drag: none;
+
+    transition:
+        filter 0.12s,
+        transform 0.1s;
+
+    transform-origin: center center;
 }
 
 .bone.drag {
-    cursor: grabbing;
-
     z-index: 20;
 
+    cursor: grabbing;
+
     filter: drop-shadow(0 6px 6px #0004);
+
+    animation: none !important;
+
+    transform:
+        rotate(var(--rotation))
+        scale(1.08);
 }
 
 
-/* =========================================================
+/* =========================
+   WHITE BONE
+   Gentle movement
+   ========================= */
+
+.bone-white {
+    animation: whiteBoneIdle 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes whiteBoneIdle {
+    0% {
+        transform:
+            translate(-4px, -3px)
+            rotate(calc(var(--rotation) - 5deg));
+    }
+
+    50% {
+        transform:
+            translate(4px, 4px)
+            rotate(calc(var(--rotation) + 5deg));
+    }
+
+    100% {
+        transform:
+            translate(-3px, 2px)
+            rotate(calc(var(--rotation) - 3deg));
+    }
+}
+
+
+/* =========================
+   BLUE BONE
+   Fast / slippery movement
+   ========================= */
+
+.bone-blue {
+    animation: blueBoneIdle 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes blueBoneIdle {
+    0% {
+        transform:
+            translateX(-2px)
+            rotate(calc(var(--rotation) - 5deg));
+    }
+
+    50% {
+        transform:
+            translateX(2px)
+            rotate(calc(var(--rotation) + 5deg));
+    }
+
+    100% {
+        transform:
+            translateX(-2px)
+            rotate(calc(var(--rotation) - 5deg));
+    }
+}
+
+
+/* =========================
+   GOLD BONE
+   Heavy / slow movement
+   ========================= */
+
+.bone-gold {
+    animation: goldBoneIdle 1.8s ease-in-out infinite alternate;
+
+    filter: drop-shadow(0 2px 3px #0003);
+}
+
+@keyframes goldBoneIdle {
+    0% {
+        transform:
+            translate(-3px, 5px)
+            rotate(calc(var(--rotation) - 4deg));
+    }
+
+    50% {
+        transform:
+            translate(4px, -4px)
+            rotate(calc(var(--rotation) + 5deg));
+    }
+
+    100% {
+        transform:
+            translate(-3px, 3px)
+            rotate(calc(var(--rotation) - 3deg));
+    }
+}
+
+
+/* =========================
    WAKE METER
-   ========================================================= */
+   ========================= */
 
 .meter {
     display: flex;
 
-    gap: 14px;
-
     align-items: center;
+
+    gap: 14px;
 
     margin-top: 14px;
 }
@@ -542,21 +728,21 @@ fieldset label,
 
     justify-content: space-between;
 
-    font-weight: bold;
-
     font-size: 0.85rem;
+
+    font-weight: bold;
 }
 
 .track {
     height: 16px;
+
+    margin: 4px 0;
 
     background: #ddd;
 
     border-radius: 10px;
 
     overflow: hidden;
-
-    margin: 4px 0;
 }
 
 #wakeFill {
@@ -572,24 +758,87 @@ fieldset label,
 }
 
 
-/* =========================================================
-   RESULT SCREEN
-   ========================================================= */
+/* =========================
+   FLOATING TEXT
+   ========================= */
+
+.floatingText {
+    position: absolute;
+
+    z-index: 100;
+
+    pointer-events: none;
+
+    font-size: 1.5rem;
+
+    font-weight: bold;
+
+    transform:
+        translate(-50%, -50%)
+        scale(0.7);
+
+    opacity: 0;
+
+    text-shadow: 2px 2px 0 white;
+
+    transition:
+        transform 0.45s ease,
+        opacity 0.45s ease;
+}
+
+.floatingText.show {
+    opacity: 1;
+
+    transform:
+        translate(-50%, -100px)
+        scale(1.1);
+}
+
+.floatingText.good {
+    color: #2e9b3f;
+}
+
+.floatingText.perfect {
+    color: #d49a00;
+
+    font-size: 1.8rem;
+
+    text-shadow:
+        2px 2px 0 white,
+        0 0 10px #f5c542;
+}
+
+.floatingText.bad {
+    color: #c62828;
+}
+
+
+/* =========================
+   RESULT
+   ========================= */
 
 #result {
     position: absolute;
 
     inset: 0;
 
-    background: #14235acc;
-
-    border-radius: 24px;
+    z-index: 50;
 
     display: grid;
 
     place-items: center;
 
-    z-index: 50;
+    background: #14235acc;
+
+    border-radius: 24px;
+}
+
+#result.victory {
+    background: #14235acc;
+}
+
+#result.defeat {
+    background: #421010dd;
 }
 
 .box {
@@ -610,37 +859,302 @@ fieldset label,
     text-align: center;
 }
 
-.box #resultImg {
-    display: block;
-
-    position: relative;
-
-    width: 180px;
-
-    max-width: 70%;
-
-    height: auto;
-
-    margin: -90px auto 4px;
-}
-
 .box h2 {
     margin-top: 0;
 }
 
+.victoryAnimation {
+    animation: victoryPop 0.6s ease;
+}
 
-/* =========================================================
-   MUTE BUTTON
-   ========================================================= */
+.defeatAnimation {
+    animation: defeatShake 0.55s ease;
+}
+
+@keyframes victoryPop {
+    0% {
+        transform: scale(0.7);
+        opacity: 0;
+    }
+
+    70% {
+        transform: scale(1.08);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes defeatShake {
+    0% {
+        transform: scale(0.8);
+    }
+
+    20% {
+        transform: translateX(-12px) rotate(-2deg);
+    }
+
+    40% {
+        transform: translateX(12px) rotate(2deg);
+    }
+
+    60% {
+        transform: translateX(-8px) rotate(-1deg);
+    }
+
+    80% {
+        transform: translateX(8px) rotate(1deg);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+
+/* =========================
+   ACHIEVEMENTS
+   ========================= */
+
+.achievementButton {
+    width: auto;
+
+    display: block;
+
+    margin: 14px auto 0;
+}
+
+.achievementPanel {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 10000;
+
+    display: grid;
+
+    place-items: center;
+
+    padding: 20px;
+
+    background: #14235acc;
+}
+
+.achievementWindow {
+    width: min(720px, 94vw);
+
+    max-height: 85vh;
+
+    overflow: hidden;
+
+    background: #fff9ee;
+
+    border: 4px solid #d3bd94;
+
+    border-radius: 22px;
+
+    box-shadow: 0 15px 50px #0005;
+}
+
+.achievementHeader {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 18px 22px;
+
+    background: #ead9b8;
+}
+
+.achievementHeader h2 {
+    margin: 0;
+
+    color: #14235a;
+
+    font-size: 1.7rem;
+}
+
+.achievementHeader span {
+    color: #8a6a1f;
+
+    font-size: 0.9rem;
+}
+
+.achievementClose {
+    width: 44px;
+    height: 44px;
+
+    border: 0;
+
+    border-radius: 50%;
+
+    background: #8a8a8a;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 1rem;
+}
+
+.achievementList {
+    max-height: calc(85vh - 100px);
+
+    overflow-y: auto;
+
+    padding: 14px;
+}
+
+.achievementItem {
+    display: grid;
+
+    grid-template-columns: 50px 1fr auto;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 13px 15px;
+
+    margin-bottom: 9px;
+
+    border: 2px solid #d3bd94;
+
+    border-radius: 13px;
+
+    background: #f4e8d3;
+}
+
+.achievementItem.locked {
+    opacity: 0.55;
+
+    filter: grayscale(0.7);
+}
+
+.achievementItem.unlocked {
+    background: #fff1b8;
+}
+
+.achievementIcon {
+    font-size: 1.8rem;
+
+    text-align: center;
+}
+
+.achievementItem b,
+.achievementItem small {
+    display: block;
+}
+
+.achievementItem b {
+    color: #14235a;
+
+    font-size: 1rem;
+}
+
+.achievementItem small {
+    margin-top: 3px;
+
+    color: #555;
+
+    font-size: 0.72rem;
+}
+
+.achievementItem > span {
+    color: #8a6a1f;
+
+    font-size: 0.65rem;
+
+    white-space: nowrap;
+}
+
+
+/* =========================
+   ACHIEVEMENT POPUP
+   ========================= */
+
+.achievementPopup {
+    position: fixed;
+
+    top: 25px;
+    right: -440px;
+
+    z-index: 11000;
+
+    width: 380px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 16px 20px;
+
+    background: #fff9ee;
+
+    border: 3px solid #d3bd94;
+
+    border-radius: 16px;
+
+    box-shadow: 0 10px 35px #0004;
+
+    transition: right 0.4s ease;
+}
+
+.achievementPopup.show {
+    right: 25px;
+}
+
+.achievementPopupIcon {
+    font-size: 2.5rem;
+}
+
+.achievementPopup strong,
+.achievementPopup b,
+.achievementPopup small {
+    display: block;
+}
+
+.achievementPopup strong {
+    color: #8a6a1f;
+
+    font-size: 0.7rem;
+}
+
+.achievementPopup b {
+    color: #14235a;
+
+    font-size: 1.05rem;
+}
+
+.achievementPopup small {
+    margin-top: 3px;
+
+    color: #555;
+
+    font-size: 0.7rem;
+}
+
+
+/* =========================
+   CONTROLS
+   ========================= */
 
 #muteBtn {
     margin-left: 8px;
 }
 
 
-/* =========================================================
+/* =========================
    MOBILE
-   ========================================================= */
+   ========================= */
 
 @media (max-width: 600px) {
 
@@ -684,12 +1198,12 @@ fieldset label,
         width: 90%;
     }
 
-    .hud {
-        padding: 10px 14px;
+    .card {
+        padding: 14px;
     }
 
-   .card {
-        padding: 14px;
+    .hud {
+        padding: 10px 14px;
     }
 
     #arena {
@@ -702,12 +1216,14 @@ fieldset label,
 
     #basket {
         right: 12px;
+
         width: 110px;
         height: 95px;
     }
 
     #basket span {
         width: 130px;
+
         bottom: -30px;
     }
 
@@ -720,12 +1236,32 @@ fieldset label,
     .box {
         width: calc(100% - 24px);
     }
+
+    .achievementPopup {
+        width: calc(100% - 30px);
+
+        right: -110%;
+
+        top: 15px;
+    }
+
+    .achievementPopup.show {
+        right: 15px;
+    }
+
+    .achievementItem {
+        grid-template-columns: 40px 1fr;
+    }
+
+    .achievementItem > span {
+        grid-column: 2;
+    }
+
+    .comboBox {
+        width: 90%;
+    }
 }
 
-
-/* =========================================================
-   VERY SMALL PHONES
-   ========================================================= */
 
 @media (max-width: 380px) {
 
@@ -752,4 +1288,27 @@ fieldset label,
     #muteBtn {
         margin-left: 0;
     }
+}
+
+/* =========================
+   RESULT BUTCH
+   ========================= */
+
+.resultButch {
+    display: block;
+
+    width: 220px;
+    max-width: 70%;
+
+    height: auto;
+
+    margin: 0 auto 15px;
+
+    object-fit: contain;
+
+    user-select: none;
+    pointer-events: none;
+
+    filter:
+        drop-shadow(0 5px 5px #0004);
 }

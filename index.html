@@ -113,6 +113,14 @@
         role="status"
       ></p>
 
+      <button
+        type="button"
+        id="achievementBtn"
+        class="btn gray achievementButton"
+      >
+        🏆 Achievements
+      </button>
+
     </form>
 
   </section>
@@ -149,6 +157,18 @@
         <b id="hudTime">0</b>
       </div>
 
+      <div class="comboHud">
+        Combo
+        <b id="hudCombo">x1</b>
+      </div>
+
+    </div>
+
+    <div id="comboBox" class="comboBox">
+      <div id="comboText">NO COMBO</div>
+      <div class="comboTimer">
+        <div id="comboTimerFill"></div>
+      </div>
     </div>
 
 
@@ -226,31 +246,71 @@
       🔊 Sound on
     </button>
 
-
-    <!-- RESULT SCREEN -->
-    <div
-      id="result"
-      class="hidden"
+    <button
+      id="achievementBtnGame"
+      class="btn gray"
     >
+      🏆 Achievements
+    </button>
 
-      <div class="box">
 
-        <h2 id="resultTitle"></h2>
+<!-- =========================
+     RESULT SCREEN
+     ========================= -->
+<div
+  id="result"
+  class="hidden"
+>
 
-        <p id="resultText"></p>
+  <div class="box">
 
-        <button
-          id="restartBtn"
-          class="btn"
-        >
-          Play Again
-        </button>
+    <!-- Butch image changes depending on win/loss -->
+    <div class="resultButchContainer">
 
-      </div>
+      <img
+        id="resultButch"
+        src="images/butch_head_sleeping.png"
+        alt="Butch"
+      >
 
     </div>
 
+
+    <h2 id="resultTitle"></h2>
+
+    <p id="resultText"></p>
+
+
+    <button
+      id="restartBtn"
+      class="btn"
+    >
+      Play Again
+    </button>
+
+  </div>
+
+</div>
+
   </section>
+
+
+  <!-- =========================
+       ACHIEVEMENTS PANEL
+       ========================= -->
+  <div id="achievementPanel" class="achievementPanel hidden">
+    <div class="achievementWindow">
+      <div class="achievementHeader">
+        <div>
+          <h2>🏆 Achievements</h2>
+          <span id="achievementCount">0/10</span>
+        </div>
+        <button id="achievementClose" class="achievementClose" type="button">✕</button>
+      </div>
+
+      <div id="achievementList" class="achievementList"></div>
+    </div>
+  </div>
 
 
   <!-- =========================
