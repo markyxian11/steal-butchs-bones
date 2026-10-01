@@ -98,6 +98,67 @@ const COMBO_MAX = 5;
 
 const COMBO_TIME = 5;
 
+const BASKET_SLOTS = [
+    [38, 34, -15],
+    [65, 36,   5],
+    [92, 34,  15],
+    [50, 22,  -8],
+    [80, 22,  10],
+    [65, 10,   0],
+    [34, 20, -20],
+    [96, 20,  20]
+];
+
+function addBoneToBasket(type, index) {
+
+    // gagawa ng holder kung wala sa HTML
+    let holder = document.getElementById("basketBones");
+
+    if (!holder) {
+        holder = document.createElement("div");
+        holder.id = "basketBones";
+        basket.appendChild(holder);
+    }
+
+    Object.assign(holder.style, {
+        position: "absolute",
+        left: "0",
+        top: "0",
+        width: "100%",
+        height: "100%",
+        zIndex: "2",
+        pointerEvents: "none",
+        display: "block"
+    });
+
+    const bone = BONES[type];
+    const slot = BASKET_SLOTS[index % BASKET_SLOTS.length];
+
+    const mini = document.createElement("img");
+
+    mini.src = bone.img;
+    mini.alt = bone.name;
+    mini.className = "basketBone";
+
+    Object.assign(mini.style, {
+        position: "absolute",
+        width: `${bone.width * 0.6}px`,
+        height: "auto",
+        left: `${slot[0]}px`,
+        top: `${slot[1]}px`,
+        margin: "0",
+        transform: `translate(-50%, -50%) rotate(${slot[2]}deg)`,
+        filter: "drop-shadow(0 2px 2px rgba(0,0,0,.3))",
+        animation: "none"
+    });
+
+    holder.appendChild(mini);
+
+    basket.classList.remove("bounce");
+    void basket.offsetWidth;
+    basket.classList.add("bounce");
+} 
+
 
 /* =========================
    PERFECT STEAL
@@ -822,6 +883,8 @@ function startGame(player) {
         .forEach(
             bone => bone.remove()
         );
+  const oldBasketBones = document.getElementById("basketBones");
+    if (oldBasketBones) oldBasketBones.innerHTML = "";
 
 
     const cfg =
@@ -1597,6 +1660,7 @@ function handleSuccessfulSteal(
 
     drag.el.remove();
 
+    addBoneToBasket(drag.type, state.bones - 1);
 
     updateHud();
 

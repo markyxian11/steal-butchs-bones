@@ -237,57 +237,110 @@ fieldset label,
    BUTTONS
    ========================= */
 
+/* =========================
+   BUTTONS (glossy 3D, blue on hover)
+   ========================= */
+
 .btn {
     width: 80%;
     max-width: 450px;
 
     margin-top: 24px;
-
     padding: 14px 20px;
 
-    border: 0;
-    border-radius: 12px;
+    border: 3px solid #a85a0f;
+    border-radius: 16px;
 
-    background: #14235a;
-    color: #f5c542;
+    background: linear-gradient(180deg, #ffe27a 0%, #ffc23d 50%, #f5a21a 100%);
 
+    color: #fff;
+    font-family: "Luckiest Guy", cursive;
     font-size: 1.1rem;
-    font-weight: bold;
-
     cursor: pointer;
 
-    box-shadow: 0 5px 0 #0c163d;
+    -webkit-text-stroke: 3px #7a3d05;
+    paint-order: stroke fill;
+    text-shadow: 0 2px 0 #7a3d05;
 
-    transition:
-        background 0.15s,
-        transform 0.1s,
-        box-shadow 0.1s;
+    box-shadow:
+        inset 0 3px 0 #fff8,
+        inset 0 -4px 0 #0002,
+        0 6px 0 #c77a12,
+        0 9px 10px #0003;
+
+    transition: filter 0.15s, transform 0.1s;
 }
 
-.btn:hover {
-    background: #1d3275;
-}
-
-.btn:active {
-    transform: translateY(3px);
-
-    box-shadow: 0 2px 0 #0c163d;
-}
-
+/* smaller buttons (Quit, Sound, Achievements) */
 .btn.gray {
     width: auto;
-
-    padding: 10px 18px;
-
-    background: #8a8a8a;
-
-    color: white;
-
-    box-shadow: 0 3px 0 #666;
+    padding: 10px 20px;
 }
 
+/* BLUE: on hover for every button, and always for Sound */
+/* BLUE on hover */
+.btn:hover,
 .btn.gray:hover {
-    background: #777;
+    border-color: #0b2a6b;
+
+    background: linear-gradient(180deg, #5aa2ff 0%, #2a6fe0 50%, #1a4fb8 100%);
+
+    -webkit-text-stroke-color: #0b1f55;
+    text-shadow: 0 2px 0 #0b1f55;
+
+    box-shadow:
+        inset 0 3px 0 #fff6,
+        inset 0 -4px 0 #0003,
+        0 6px 0 #0d3a8c,
+        0 9px 10px #0003;
+
+    filter: brightness(1.08);
+}
+
+/* PRESSED */
+.btn:active {
+    transform: translateY(5px);
+
+    box-shadow:
+        inset 0 3px 0 #fff6,
+        inset 0 -4px 0 #0003,
+        0 1px 0 #0d3a8c;
+}/* BLUE on hover */
+.btn:hover,
+.btn.gray:hover {
+    border-color: #0b2a6b;
+
+    background: linear-gradient(180deg, #5aa2ff 0%, #2a6fe0 50%, #1a4fb8 100%);
+
+    -webkit-text-stroke-color: #0b1f55;
+    text-shadow: 0 2px 0 #0b1f55;
+
+    box-shadow:
+        inset 0 3px 0 #fff6,
+        inset 0 -4px 0 #0003,
+        0 6px 0 #0d3a8c,
+        0 9px 10px #0003;
+
+    filter: brightness(1.08);
+}
+
+/* PRESSED */
+.btn:active {
+    transform: translateY(5px);
+
+    box-shadow:
+        inset 0 3px 0 #fff6,
+        inset 0 -4px 0 #0003,
+        0 1px 0 #0d3a8c;
+}
+/* PRESSED */
+.btn:active {
+    transform: translateY(5px);
+
+    box-shadow:
+        inset 0 3px 0 #fff6,
+        inset 0 -4px 0 #0003,
+        0 1px 0 #0d3a8c;
 }
 
 
@@ -412,7 +465,7 @@ fieldset label,
     border: 3px solid #d3bd94;
     border-radius: 18px;
 
-    background: #fdf6e8;
+ background: url("images/backyard-grass.png") center / cover no-repeat;
 
     overflow: hidden;
 
@@ -1311,4 +1364,452 @@ fieldset label,
 
     filter:
         drop-shadow(0 5px 5px #0004);
+}
+
+
+/* =========================
+   REFERENCE UI THEME
+   ========================= */
+
+/* page: dotted pattern (pwede mong palitan ng paw image) */
+body {
+    background:
+        radial-gradient(#e6d2a6 2.5px, transparent 3px) 0 0 / 24px 24px,
+        #f8edd8;
+    /* paws: url("images/paws.png") center / 260px repeat, */
+}
+
+/* game card: gold border + navy frame */
+#gameScreen {
+    border: 4px solid #f2a91e;
+    box-shadow:
+        0 0 0 5px #14235a,
+        0 12px 0 5px #0c163d,
+        0 20px 30px #0004;
+}
+
+/* HUD: navy frame with white pills */
+.hud {
+    gap: 10px;
+    padding: 10px;
+    background: #14235a;
+    border-radius: 16px;
+    box-shadow: 0 5px 0 #0c163d;
+}
+
+.hud > div {
+    flex: 1 1 90px;
+    padding: 8px 14px;
+    background: #fff9ee;
+    color: #14235a;
+    border: 2px solid #d98a14;
+    border-radius: 12px;
+}
+
+#hudScore { color: #d98a14; }
+#hudBones { color: #2e7d32; }
+#hudTime  { color: #d9534f; }
+
+/* arena frame */
+#arena {
+    margin-top: 18px;
+    border: 4px solid #f2a91e;
+    box-shadow: 0 0 0 4px #14235a, 0 8px 0 4px #0c163d;
+}
+
+/* tip = white pill inside the arena */
+.tip {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    margin: 0;
+    padding: 6px 14px;
+    background: #fff9ee;
+    border: 2px solid #d98a14;
+    border-radius: 20px;
+    pointer-events: none;
+    z-index: 6;
+}
+
+/* wake meter */
+.track {
+    height: 20px;
+    background: #fff;
+    border: 3px solid #14235a;
+    border-radius: 12px;
+}
+
+/* =========================
+   HARDCODED BASKET
+   ========================= */
+
+#basket {
+    right: 20px;
+    bottom: 40px;
+    width: 130px;
+    height: 120px;
+    display: block;
+
+    background: url("images/basket.png") center / contain no-repeat;
+    border: 0;
+    border-radius: 0;
+
+    cursor: pointer;
+    transition: transform 0.15s, filter 0.15s;
+}
+
+#basket:hover {
+    transform: translateY(-4px) scale(1.06);
+    filter: drop-shadow(0 0 10px #ffd34d) brightness(1.05);
+}
+
+#basket.bounce {
+    animation: basketBounce 0.35s ease;
+}
+
+@keyframes basketBounce {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.14, 0.9); }
+    70%  { transform: scale(0.96, 1.06); }
+    100% { transform: scale(1); }
+}
+
+/* label pill */
+#basket span {
+    bottom: -16px;
+    width: auto;
+    padding: 4px 12px;
+    background: #fff9ee;
+    color: #14235a;
+    border: 2px solid #d98a14;
+    border-radius: 20px;
+    white-space: nowrap;
+    z-index: 3;
+}
+
+/* bones inside the basket */
+#basketBones {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    top: 34px;
+    bottom: 28px;
+
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-end;
+    justify-content: center;
+
+    pointer-events: none;
+}
+
+.basketBone {
+    height: auto;
+    margin: -4px -6px;
+    transform: rotate(var(--r, 0deg));
+    animation: basketPop 0.3s ease;
+}
+
+@keyframes basketPop {
+    from { transform: rotate(var(--r, 0deg)) scale(0); }
+    to   { transform: rotate(var(--r, 0deg)) scale(1); }
+}
+
+/* =========================
+   SVG BASKET + BONES INSIDE
+   ========================= */
+
+#basket {
+    background: none !important;
+    border: 0 !important;
+    font-size: 0;
+}
+
+.basketBack,
+.basketFront {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.basketBack  { z-index: 1; }
+.basketFront { z-index: 3; }
+
+#basket span {
+    z-index: 4;
+    font-size: 0.75rem;
+}
+
+#basketBones {
+    position: absolute;
+    inset: 0;
+    display: block;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.basketBone {
+    position: absolute;
+    height: auto;
+    margin: 0;
+    transform: translate(-50%, -50%) rotate(var(--r, 0deg));
+    animation: basketDrop 0.35s ease;
+    filter: drop-shadow(0 2px 2px #0004);
+}
+
+@keyframes basketDrop {
+    from { transform: translate(-50%, -160%) rotate(var(--r, 0deg)) scale(0.4); opacity: 0; }
+    to   { transform: translate(-50%, -50%) rotate(var(--r, 0deg)) scale(1); opacity: 1; }
+}
+
+
+
+
+/* =========================
+   RESULT POPUP (improved)
+   ========================= */
+
+#result {
+    backdrop-filter: blur(4px);
+}
+
+#result .box {
+    max-width: 380px;
+    margin-top: 90px;
+    padding: 24px 26px 28px;
+
+    background: #fff9ee;
+    border: 5px solid #f2a91e;
+    border-radius: 24px;
+
+    box-shadow:
+        0 0 0 5px #14235a,
+        0 12px 0 5px #0c163d,
+        0 25px 40px #0006;
+}
+
+#result.defeat .box {
+    border-color: #e53935;
+}
+
+.resultButchContainer {
+    margin-top: -110px;
+    margin-bottom: 6px;
+}
+
+#resultButch {
+    width: 170px;
+    max-width: 70%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+
+    filter: drop-shadow(0 8px 8px #0005);
+    animation: resultFloat 2s ease-in-out infinite alternate;
+}
+
+@keyframes resultFloat {
+    from { transform: translateY(0) rotate(-2deg); }
+    to   { transform: translateY(-8px) rotate(2deg); }
+}
+
+#resultTitle {
+    margin: 4px 0 10px;
+    font-size: 2rem;
+    line-height: 1.1;
+
+    -webkit-text-stroke: 5px #14235a;
+    paint-order: stroke fill;
+    text-shadow: 0 4px 0 #14235a;
+}
+
+#result.victory #resultTitle { color: #ffd34d; }
+#result.defeat  #resultTitle { color: #ff6b5e; }
+
+#resultText {
+    margin: 0;
+    padding: 14px 16px;
+
+    background: #f4e8d3;
+    border: 3px solid #d3bd94;
+    border-radius: 16px;
+
+    color: #14235a;
+    font-size: 0.95rem;
+    line-height: 1.9;
+}
+
+#resultText b {
+    color: #d98a14;
+}
+
+#restartBtn {
+    width: 100%;
+    margin-top: 20px;
+}
+
+
+/*new ui MENU, wag nalang tanggaling ung existing
+/* =========================
+   MAIN MENU (improved)
+   ========================= */
+
+#registerScreen {
+    background: #fff9ee;
+    border: 4px solid #f2a91e;
+    box-shadow:
+        0 0 0 5px #14235a,
+        0 12px 0 5px #0c163d,
+        0 25px 40px #0004;
+}
+
+/* title with outline */
+#registerScreen h1 {
+    color: #ffd34d;
+    -webkit-text-stroke: 6px #14235a;
+    paint-order: stroke fill;
+    text-shadow: 0 4px 0 #14235a;
+}
+
+/* tagline as a pill */
+.sub {
+    display: inline-block;
+    margin: 14px 0 24px;
+    padding: 4px 18px;
+    background: #14235a;
+    color: #ffd34d;
+    border-radius: 20px;
+}
+
+/* name input */
+input[type="text"] {
+    font-family: "Luckiest Guy", cursive;
+    letter-spacing: 1.2px;
+    background: #fff;
+    border: 3px solid #14235a;
+    border-radius: 14px;
+    box-shadow: inset 0 3px 0 #0001;
+    color: #14235a;
+}
+
+input[type="text"]:focus {
+    border-color: #f2a91e;
+    box-shadow: 0 0 0 4px #f2a91e55;
+}
+
+input[type="text"]::placeholder {
+    color: #14235a88;
+}
+
+/* difficulty = pill buttons */
+fieldset {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+legend {
+    width: 100%;
+    text-align: center;
+    float: left;
+}
+
+fieldset label {
+    position: relative;
+    margin: 0;
+    padding: 8px 20px;
+    background: #f4e8d3;
+    border: 3px solid #d3bd94;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: transform 0.1s, background 0.15s, border-color 0.15s;
+}
+
+fieldset label:hover {
+    transform: translateY(-2px);
+    border-color: #14235a;
+}
+
+fieldset label input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* selected */
+fieldset label:has(input:checked) {
+    background: #14235a;
+    border-color: #f2a91e;
+    color: #ffd34d;
+    box-shadow: 0 4px 0 #0c163d;
+}
+
+/* checkbox */
+.check {
+    cursor: pointer;
+}
+
+.check input {
+    accent-color: #14235a;
+    width: 18px;
+    height: 18px;
+    vertical-align: -3px;
+    margin-right: 6px;
+}
+
+/* achievements button on menu */
+.achievementButton {
+    margin-top: 10px;
+}
+
+/* tighter spacing */
+#registerScreen .btn {
+    margin-top: 18px;
+}
+
+/* =========================
+   FIX: Butch overlap on menu
+   ========================= */
+
+#registerScreen {
+    margin-top: 130px;
+    padding-top: 110px;
+}
+
+.hero {
+    top: -125px;
+    width: 280px;
+}
+
+@media (max-width: 600px) {
+
+    #registerScreen {
+        margin-top: 100px;
+        padding-top: 95px;
+    }
+
+    .hero {
+        top: -95px;
+        width: 220px;
+    }
+}
+
+
+
+
+/* BACKGROUND WHOLE PAGE / GOLD AND BLUE PAWS */
+html {
+    min-height: 100%;
+
+    background:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cg transform='translate(38 42) rotate(-20) scale(1.5)' fill='%23f2a91e' fill-opacity='.75'%3E%3Cellipse cx='0' cy='6' rx='9' ry='7'/%3E%3Cellipse cx='-10' cy='-5' rx='3.5' ry='4.5'/%3E%3Cellipse cx='-4' cy='-12' rx='3.5' ry='4.5'/%3E%3Cellipse cx='4' cy='-12' rx='3.5' ry='4.5'/%3E%3Cellipse cx='10' cy='-5' rx='3.5' ry='4.5'/%3E%3C/g%3E%3Cg transform='translate(112 112) rotate(20) scale(1.5)' fill='%232a6fe0' fill-opacity='.65'%3E%3Cellipse cx='0' cy='6' rx='9' ry='7'/%3E%3Cellipse cx='-10' cy='-5' rx='3.5' ry='4.5'/%3E%3Cellipse cx='-4' cy='-12' rx='3.5' ry='4.5'/%3E%3Cellipse cx='4' cy='-12' rx='3.5' ry='4.5'/%3E%3Cellipse cx='10' cy='-5' rx='3.5' ry='4.5'/%3E%3C/g%3E%3C/svg%3E")
+        0 0 / 150px 150px repeat fixed,
+        #f8edd8;
+}
+
+body {
+    background: transparent !important;
 }
