@@ -1813,3 +1813,38 @@ html {
 body {
     background: transparent !important;
 }
+
+.modeDesc{display:block;font-size:.7rem;font-weight:normal;margin-top:2px}
+
+/* equal-size mode buttons */
+label:has(input[name="gameMode"]){
+  width:170px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+
+/* description box */
+.modeInfo{
+  max-width:420px;
+  min-height:150px;
+  margin:12px auto 0;
+  padding:12px 16px;
+  background:#fdf3d9;
+  border:2px solid #d9c49b;
+  border-radius:14px;
+  color:#14235a;
+  text-align:left;
+  font-size:.8rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.modeInfo .modeBody{animation:modeIn .25s ease;width:100%}
+.modeInfo h3{margin:0 0 4px;font-size:1rem}
+.modeInfo p{margin:0 0 6px}
+.modeInfo ul{margin:0;padding-left:18px}
+.modeInfo li{margin:2px 0}
+.modeHint{text-align:center;opacity:.7}
+@keyframes modeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}

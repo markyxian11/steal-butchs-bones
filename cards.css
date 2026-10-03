@@ -1,0 +1,40 @@
+/* ===== CARDS ===== */
+#cardPanel{position:absolute;right:12px;left:auto;top:12px;z-index:6;width:112px;text-align:center;pointer-events:none;transition:transform .2s;background:#fff9eecc;border-radius:12px;padding:6px 6px 4px;box-shadow:0 3px 8px #0003}
+#cardPanel img{width:100%;height:132px;object-fit:contain;filter:drop-shadow(0 4px 6px #0003)}
+#cardInfo{font-weight:bold;font-size:1.1rem;margin-top:2px}
+#cardInfo small{display:block;font-size:.6rem;font-weight:normal;white-space:nowrap}
+#cardPanel.bad{animation:cardShake .4s;filter:drop-shadow(0 0 8px #d32f2f)}
+#cardPanel.good{transform:scale(1.12);filter:drop-shadow(0 0 10px #f5c542)}
+@keyframes cardShake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+#cardPanel.pop{animation:panelPop .5s cubic-bezier(.3,1.5,.5,1)}
+@keyframes panelPop{0%{transform:scale(.6) rotate(-8deg)}100%{transform:scale(1) rotate(0)}}
+
+/* ===== CARD PICKER ===== */
+#cardPicker{position:absolute;inset:0;background:#14235ad9;border-radius:24px;display:grid;place-items:center;z-index:40;animation:pickIn .3s ease}
+#cardPicker.fade{opacity:0;transition:opacity .5s}
+@keyframes pickIn{from{opacity:0}}
+
+.pbox{text-align:center;color:#fff;padding:10px}
+.pbox h2{margin:0 0 4px;color:#f5c542}
+.pbox p{margin:0 0 18px;font-size:.9rem}
+
+.prow{display:flex;gap:22px;justify-content:center;padding-top:10px}
+.pcard{position:relative;width:130px;height:190px;background:none;border:0;padding:0;cursor:pointer;transition:transform .2s,opacity .35s}
+.pcard:hover:not(:disabled){transform:translateY(-10px) scale(1.05)}
+.pcard.dim{opacity:0;transform:translateY(40px) scale(.8)}
+.pcard::before{content:"";position:absolute;inset:-16px;border-radius:24px;background:radial-gradient(circle,#f5c542cc,transparent 70%);opacity:0;pointer-events:none}
+.pcard.flip::before{animation:glowPulse 1s ease-out forwards}
+@keyframes glowPulse{0%{opacity:0;transform:scale(.7)}40%{opacity:1;transform:scale(1.15)}100%{opacity:.55;transform:scale(1)}}
+
+.pdeal{display:block;width:100%;height:100%;perspective:700px;transform:rotate(var(--r,0deg));animation:dealIn .7s cubic-bezier(.2,1.15,.3,1) backwards;animation-delay:calc(var(--i,0) * .15s);transition:transform .45s cubic-bezier(.3,1.4,.5,1)}
+.pcard.flip .pdeal{transform:rotate(0deg) scale(1.18)}
+@keyframes dealIn{from{opacity:0;transform:translateY(-320px) rotate(-45deg) scale(.5)}}
+
+.pin{display:block;position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .8s}
+.pcard.flip .pin{transform:rotateY(180deg)}
+.pin img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.pfront{transform:rotateY(180deg)}
+
+.cardFly{position:fixed;z-index:100;pointer-events:none;object-fit:contain;transition:transform .6s cubic-bezier(.5,0,.2,1);filter:drop-shadow(0 8px 14px #0006)}
+
+@media(max-width:600px){.pcard{width:92px;height:135px}#cardPanel{width:70px}#cardPanel img{height:100px}}

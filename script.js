@@ -734,6 +734,26 @@ function validate(data) {
     }
 
 
+    /* NEW: game mode check */
+    if (!data.get("gameMode")) {
+
+        showError(
+            "modeError",
+            "Please choose a game mode."
+        );
+
+        valid = false;
+
+    } else {
+
+        showError(
+            "modeError",
+            ""
+        );
+
+    }
+
+
     if (!$("agree").checked) {
 
         showError(
@@ -755,6 +775,36 @@ function validate(data) {
 
     return valid;
 
+}
+
+const MODE_INFO = {
+  classic: {
+    title: "Classic",
+    text: "Steal all 8 bones before time runs out.",
+    rules: [
+      "Win by putting all 8 bones in the basket.",
+      "You lose if Butch wakes up or time runs out.",
+      "Bigger bones score more but wake Butch more easily."
+    ]
+  },
+  cards: {
+    title: "Card Mode",
+    text: "Draw a card and steal only the bones shown on it.",
+    rules: [
+      "Finish a card: +3 seconds.",
+      "Wrong bone in the basket: -5 seconds and Butch gets louder.",
+      "No finish line: keep drawing cards until time runs out or Butch wakes up."
+    ]
+  }
+};
+
+function showModeInfo(mode) {
+  const info = MODE_INFO[mode];
+  if (!info) return;
+  $("modeInfo").innerHTML =
+    `<div class="modeBody"><h3>${info.title}</h3><p>${info.text}</p><ul>` +
+    info.rules.map(r => `<li>${r}</li>`).join("") +
+    `</ul></div>`;
 }
 
 
@@ -787,6 +837,32 @@ form
     });
 
 
+/* NEW: clear the game mode error when a mode is chosen */
+form
+    .querySelectorAll(
+        "[name=gameMode]"
+    )
+    .forEach(radio => {
+
+        radio.addEventListener(
+            "change",
+            () => {
+
+                showError(
+                    "modeError",
+                    ""
+                );
+
+                showModeInfo(
+                    radio.value
+                );
+
+            }
+        );
+
+    });
+
+
 $("agree").addEventListener(
     "change",
     () =>
@@ -795,7 +871,6 @@ $("agree").addEventListener(
             ""
         )
 );
-
 
 form.addEventListener(
     "submit",
@@ -831,8 +906,10 @@ form.addEventListener(
                     .trim(),
 
             difficulty:
-                data.get("difficulty")
+                data.get("difficulty"),
 
+            mode:
+                data.get("gameMode")
         };
 
 
@@ -943,6 +1020,9 @@ function startGame(player) {
 
     spawnBones();
 
+    state.mode = player.mode;
+    state.boneScore = 0;
+    if (state.mode === "cards") Cards.start(); else Cards.stop();
 
     updateHud();
 
@@ -952,7 +1032,6 @@ function startGame(player) {
 
 
     clearInterval(state.timer);
-
 
     state.timer =
         setInterval(
@@ -970,7 +1049,6 @@ function startGame(player) {
     bgmPlay();
 
 }
-
 
 /* =========================
    SPAWN BONES
@@ -1104,7 +1182,7 @@ function spawnBones() {
 
 function grab(event, element) {
 
-    if (!state || state.over) {
+    if (!state || state.over || state.paused) {
         return;
     }
 
@@ -1201,170 +1279,55 @@ function grab(event, element) {
    ========================= */
 
 function move(event) {
-
-    const drag =
-        state.drag;
-
-
-    if (!drag || state.over) {
-        return;
-    }
-
-
-    const now =
-        performance.now();
-
-
-    const dt =
-        Math.max(
-            now - drag.lt,
-            1
-        );
-
-
-    let speed =
-        Math.hypot(
-            event.clientX - drag.lx,
-            event.clientY - drag.ly
-        ) / dt;
-
-
-    speed *= drag.control;
-
-
-    drag.maxSpeed =
-        Math.max(
-            drag.maxSpeed,
-            speed
-        );
-
-
-    state.currentDragMaxSpeed =
-        Math.max(
-            state.currentDragMaxSpeed,
-            speed
-        );
-
-
-    drag.lx =
-        event.clientX;
-
-
-    drag.ly =
-        event.clientY;
-
-
-    drag.lt =
-        now;
-
-
-    /* FAST MOVEMENT = NOISE */
-
+    const drag = state.drag;
+    if (!drag || state.over) return;
+ 
+    const now = performance.now();
+    const dt = Math.max(now - drag.lt, 1);
+ 
+    /* speed per event (no 'control' multiplier) */
+    const speed =
+        Math.hypot(event.clientX - drag.lx, event.clientY - drag.ly) / dt;
+ 
+    drag.maxSpeed = Math.max(drag.maxSpeed, speed);
+    state.currentDragMaxSpeed = Math.max(state.currentDragMaxSpeed, speed);
+ 
+    drag.lx = event.clientX;
+    drag.ly = event.clientY;
+    drag.lt = now;
+ 
+    /* FAST MOVEMENT = NOISE (added on every mouse event; only 'risk' sets the bone difference) */
     if (speed > SAFE_SPEED) {
-
-        const noiseAmount =
+        const noise =
             (speed - SAFE_SPEED) *
             MOVE_GAIN *
             state.cfg.sensitivity *
             drag.risk *
             10;
-
-
-        addWake(noiseAmount);
-
-
-        state.currentDragWake +=
-            noiseAmount;
-
-
-        /* BLUE BONE = EXTRA NOISE */
-
-        if (drag.type === "blue") {
-
-            const extra =
-                noiseAmount * 0.20;
-
-
-            addWake(extra);
-
-            state.currentDragWake +=
-                extra;
-
-        }
-
+        addWake(noise);
+        state.currentDragWake += noise;
     }
-
-
-    const arenaRect =
-        arena.getBoundingClientRect();
-
-
-    let targetX =
-        event.clientX -
-        arenaRect.left -
-        drag.dx;
-
-
-    let targetY =
-        event.clientY -
-        arenaRect.top -
-        drag.dy;
-
-
-    /* GOLD BONE = HEAVY */
-
-    const follow =
-        drag.type === "gold"
-            ? 0.72
-            : 1;
-
-
-    let x =
-        drag.el.offsetLeft +
-        (targetX - drag.el.offsetLeft) *
-        follow;
-
-
-    let y =
-        drag.el.offsetTop +
-        (targetY - drag.el.offsetTop) *
-        follow;
-
-
-    /* BLUE BONE = SLIPPERY */
-
+ 
+    const arenaRect = arena.getBoundingClientRect();
+    const targetX = event.clientX - arenaRect.left - drag.dx;
+    const targetY = event.clientY - arenaRect.top - drag.dy;
+ 
+    /* GOLD BONE = HEAVY (lag applied per event) */
+    const follow = drag.type === "gold" ? 0.72 : 1;
+ 
+    let x = drag.el.offsetLeft + (targetX - drag.el.offsetLeft) * follow;
+    let y = drag.el.offsetTop + (targetY - drag.el.offsetTop) * follow;
+ 
+    /* BLUE BONE = SLIPPERY (unchanged) */
     if (drag.type === "blue") {
-
-        x +=
-            Math.sin(now / 75) *
-            1.2;
-
+        x += Math.sin(now / 75) * 1.2;
     }
-
-
-    x =
-        Math.min(
-            Math.max(x, 0),
-            arenaRect.width -
-            drag.el.offsetWidth
-        );
-
-
-    y =
-        Math.min(
-            Math.max(y, 0),
-            arenaRect.height -
-            drag.el.offsetHeight
-        );
-
-
-    drag.el.style.left =
-        `${x}px`;
-
-
-    drag.el.style.top =
-        `${y}px`;
-
+ 
+    x = Math.min(Math.max(x, 0), arenaRect.width - drag.el.offsetWidth);
+    y = Math.min(Math.max(y, 0), arenaRect.height - drag.el.offsetHeight);
+ 
+    drag.el.style.left = `${x}px`;
+    drag.el.style.top = `${y}px`;
 }
 
 
@@ -1448,7 +1411,18 @@ function drop() {
         centerY < basketRect.bottom;
 
 
-    if (insideBasket) {
+        if (insideBasket) {
+
+        /* CARD CHECK: is this the right bone for the card? */
+        if (state.mode === "cards" && !Cards.accept(drag.type)) {
+
+            Cards.reject(drag.el);   // bone goes back to the bowl, Butch gets louder
+
+            breakCombo();            // wrong bone breaks the combo
+
+            return;                  // stop here, no points for a wrong bone
+        }
+
 
         handleSuccessfulSteal(
             drag,
@@ -1650,6 +1624,7 @@ function handleSuccessfulSteal(
     state.score += points;
 
     state.bones++;
+    state.boneScore += bone.points;
 
 
     Sound.play(
@@ -1660,39 +1635,37 @@ function handleSuccessfulSteal(
 
     drag.el.remove();
 
-    addBoneToBasket(drag.type, state.bones - 1);
+    addBoneToBasket(
+        drag.type,
+        (state.bones - 1) % BONE_LIST.length
+    );
 
     updateHud();
 
     updateCombo();
 
 
-    /* WIN */
+    /* tell the current card that a right bone was delivered */
+    if (state.mode === "cards") {
 
-    if (
-        state.bones ===
-        BONE_LIST.length
-    ) {
+        /* CARD MODE: keep going, the card decides what to collect */
+        Cards.deliver(drag.type);
 
-        unlockAchievement(
-            "cleanSweep"
-        );
+    } else if (state.bones === BONE_LIST.length) {
 
+        /* CLASSIC MODE: win at 8 bones */
+        unlockAchievement("cleanSweep");
 
         if (state.wake < 20) {
-
-            unlockAchievement(
-                "deepSleeper"
-            );
-
+            unlockAchievement("deepSleeper");
         }
-
 
         endGame(true);
 
+        }
+
     }
 
-}
 
 
 /* =========================
@@ -1859,6 +1832,9 @@ function tick() {
         return;
     }
 
+    if (state.paused) { 
+        return;
+    }
 
     const now =
         performance.now();
@@ -1978,7 +1954,9 @@ function updateHud() {
 
 
     $("hudBones").textContent =
-        `${state.bones}/${BONE_LIST.length}`;
+        state.mode === "cards"
+            ? state.bones
+            : `${state.bones}/${BONE_LIST.length}`;
 
 
     $("hudTime").textContent =
@@ -2288,6 +2266,14 @@ function endGame(
         state.score +
         timeBonus;
 
+    /* Card Mode shows Bone Score, Classic keeps "You stole" */
+    const boneLine =
+        state.mode === "cards"
+            ? `🦴 Bone Score:
+               <b>${state.bones} bones · ${state.boneScore} pts</b>`
+            : `🦴 You stole:
+               <b>${state.bones}/${BONE_LIST.length}</b>`;
+
 
 const result =
     $("result");
@@ -2419,9 +2405,11 @@ if (win) {
 
         $("resultTitle")
             .textContent =
-            reason === "Butch woke up!"
+                reason === "Butch woke up!"
                 ? "BUTCH CAUGHT YOU!"
-                : "HEIST FAILED!";
+                : state.mode === "cards"
+                    ? "TIME'S UP!"
+                    : "HEIST FAILED!";
 
 
         $("resultText")
@@ -2432,10 +2420,7 @@ if (win) {
 
                 <br><br>
 
-                🦴 You stole:
-                <b>
-                    ${state.bones}/${BONE_LIST.length}
-                </b>
+                ${boneLine}
 
                 <br>
 
@@ -2497,13 +2482,16 @@ $("restartBtn").addEventListener(
 $("quitBtn").addEventListener(
     "click",
     () => {
-
+        
         clearInterval(
             state.timer
         );
 
 
         state.over = true;
+
+
+        Cards.stop();
 
 
         Sound.stopAll();

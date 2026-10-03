@@ -7,6 +7,7 @@
   <title>Steal Butch's Bones</title>
 
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="cards.css">
 
   <!-- Luckiest Guy font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -83,6 +84,34 @@
       </fieldset>
 
       <p class="error" id="difficultyError"></p>
+
+            <fieldset class="modeGroup">
+
+        <legend>Choose game mode</legend>
+
+        <label>
+          <input
+            type="radio"
+            name="gameMode"
+            value="classic"
+          >
+          Classic
+        </label>
+
+        <label>
+          <input
+            type="radio"
+            name="gameMode"
+            value="cards"
+          >
+          Card Mode
+        </label>
+
+      </fieldset>
+        <div id="modeInfo" class="modeInfo" aria-live="polite">
+          <p class="modeHint">Pick a mode to see how it works.</p>
+        </div>
+      <p class="error" id="modeError"></p>
 
 
       <label class="check">
@@ -336,6 +365,9 @@
 
   <!-- Sound system MUST load before script.js -->
   <script src="sounds.js"></script>
+
+  <!-- Card draw logic -->
+  <script src="cards.js"></script>
 
   <!-- Main game logic -->
   <script src="script.js"></script>

@@ -522,7 +522,7 @@ const Sound = (() => {
         },
 
 
-        butchClick: () => {
+            butchClick: () => {
 
             tone(
                 130,
@@ -538,6 +538,68 @@ const Sound = (() => {
                 0.18,
                 0.1
             );
+
+        },
+
+
+        /* ===== NEW: CARD SOUNDS ===== */
+
+        cardDeal: () => {
+
+            [0, 0.15, 0.3].forEach(d => {
+
+                noise(0.14, 0.1, 3000, d);
+
+                tone(300, 0.12, "triangle", 0.06, d, 600);
+
+            });
+
+        },
+
+
+        cardHover: () => {
+
+            tone(900, 0.04, "triangle", 0.05);
+
+        },
+
+
+        cardFlip: () => {
+
+            noise(0.18, 0.12, 3500);
+
+            tone(400, 0.2, "triangle", 0.1, 0, 900);
+
+        },
+
+
+        cardReveal: type => {
+
+            if (type === "gold") {
+
+                [880, 1175, 1568].forEach((f, i) => tone(f, 0.28, "triangle", 0.2, i * 0.09));
+
+            } else if (type === "blue") {
+
+                [784, 988].forEach((f, i) => tone(f, 0.22, "triangle", 0.18, i * 0.09));
+
+            } else if (type === "white") {
+
+                tone(660, 0.18, "triangle", 0.16);
+
+            } else {
+
+                /* bonus card */
+                [660, 880, 1100].forEach((f, i) => tone(f, 0.22, "sine", 0.16, i * 0.07));
+
+            }
+
+        },
+
+
+        cardFly: () => {
+
+            tone(350, 0.35, "sine", 0.1, 0, 1000);
 
         }
 
