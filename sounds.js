@@ -597,9 +597,72 @@ const Sound = (() => {
         },
 
 
-        cardFly: () => {
+            cardFly: () => {
 
             tone(350, 0.35, "sine", 0.1, 0, 1000);
+
+        },
+
+
+        /* ===== NEW: START MENU SOUNDS ===== */
+
+        menuEasy: () => {
+
+            tone(520, 0.1, "triangle", 0.16, 0, 640);
+
+        },
+
+
+        menuNormal: () => {
+
+            tone(620, 0.09, "triangle", 0.16);
+
+            tone(780, 0.1, "triangle", 0.16, 0.07);
+
+        },
+
+
+        menuHard: () => {
+
+            [700, 880, 1100].forEach((f, i) => tone(f, 0.09, "triangle", 0.16, i * 0.06));
+
+            noise(0.08, 0.05, 1200);
+
+        },
+
+
+        menuClassic: () => {
+
+            tone(330, 0.12, "sine", 0.18);
+
+            tone(495, 0.14, "sine", 0.15, 0.08);
+
+        },
+
+
+        menuCards: () => {
+
+            noise(0.1, 0.1, 3500);
+
+            tone(500, 0.1, "triangle", 0.12, 0, 900);
+
+            tone(1000, 0.08, "triangle", 0.08, 0.08);
+
+        },
+
+
+        menuClick: () => {
+
+            tone(700, 0.05, "square", 0.06);
+
+        },
+
+
+        menuStart: () => {
+
+            [392, 523, 659, 784].forEach((f, i) => tone(f, 0.18, "triangle", 0.2, i * 0.08));
+
+            tone(1047, 0.4, "triangle", 0.2, 0.34);
 
         }
 

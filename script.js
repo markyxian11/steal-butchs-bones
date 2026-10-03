@@ -872,6 +872,65 @@ $("agree").addEventListener(
         )
 );
 
+
+/* =========================
+   START MENU CLICK SOUNDS
+   ========================= */
+
+const MENU_SOUNDS = {
+    easy: "menuEasy",
+    normal: "menuNormal",
+    hard: "menuHard",
+    classic: "menuClassic",
+    cards: "menuCards"
+};
+
+
+form
+    .querySelectorAll(
+        "[name=difficulty], [name=gameMode]"
+    )
+    .forEach(radio => {
+
+        radio.addEventListener(
+            "change",
+            () => {
+
+                Sound.init();
+
+                Sound.play(
+                    MENU_SOUNDS[radio.value]
+                );
+
+            }
+        );
+
+    });
+
+
+$("agree").addEventListener(
+    "change",
+    () => {
+
+        Sound.init();
+
+        Sound.play("menuClick");
+
+    }
+);
+
+
+$("achievementBtn").addEventListener(
+    "click",
+    () => {
+
+        Sound.init();
+
+        Sound.play("menuClick");
+
+    }
+);
+
 form.addEventListener(
     "submit",
     event => {
@@ -915,7 +974,7 @@ form.addEventListener(
 
         Sound.init();
 
-        Sound.play("formSuccess");
+        Sound.play("menuStart");
 
 
         $("formSuccess").textContent =
