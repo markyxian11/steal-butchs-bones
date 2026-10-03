@@ -148,6 +148,7 @@
         class="btn gray achievementButton"
       >
         🏆 Achievements
+        <button type="button" id="shopBtnStart" class="btn gray" onclick="openShop()">🛒 Power-Up Shop</button>
       </button>
 
     </form>
@@ -190,6 +191,15 @@
         Combo
         <b id="hudCombo">x1</b>
       </div>
+
+      <!-- IN-GAME POWER-UP INVENTORY -->
+    <div id="powerup-inventory" class="powerup-inventory">
+      <button onclick="usePowerUp('sleepSpray')" class="inv-btn" title="Sleep Spray">💤 <span id="qty-sleep">0</span></button>
+      <button onclick="usePowerUp('slowTime')" class="inv-btn" title="Slow Time">🐌 <span id="qty-slow">0</span></button>
+      <button onclick="usePowerUp('silentGloves')" class="inv-btn" title="Silent Gloves">🛡️ <span id="qty-gloves">0</span></button>
+      <button onclick="usePowerUp('boneMagnet')" class="inv-btn" title="Bone Magnet">🧲 <span id="qty-magnet">0</span></button>
+      <button onclick="usePowerUp('freezeButch')" class="inv-btn" title="Freeze Butch">❄️ <span id="qty-freeze">0</span></button>
+    </div>
 
     </div>
 
@@ -297,6 +307,7 @@
       class="btn gray"
     >
       🏆 Achievements
+      <button type="button" id="shopBtnStart" class="btn gray" onclick="openShop()">🛒 Power-Up Shop</button>
     </button>
 
 
@@ -358,6 +369,69 @@
     </div>
   </div>
 
+  <!-- Power-Up Shop Modal -->
+<div id="powerup-shop-modal" class="shop-modal hidden">
+    <div class="shop-container">
+        <button class="close-btn" id="close-shop-btn">&times;</button>
+        
+        <div class="shop-header">
+            <h2>🛒 POWER-UP SHOP</h2>
+            <div class="coin-display">🪙 coins: <span id="shop-coin-count">99999</span></div>
+        </div>
+
+        <div class="shop-items">
+            <!-- Sleep Spray -->
+            <div class="shop-item">
+                <div class="item-icon">💤</div>
+                <div class="item-info">
+                    <h3>SLEEP SPRAY</h3>
+                    <p>REDUCE BUTCH'S WAKE METER BY 20%.</p>
+                </div>
+                <button class="buy-btn" onclick="buyPowerUp('sleepSpray', 50)">🪙 50</button>
+            </div>
+
+            <!-- Slow Time -->
+            <div class="shop-item">
+                <div class="item-icon">🐌</div>
+                <div class="item-info">
+                    <h3>SLOW TIME</h3>
+                    <p>SLOWS THE GAME TIMER FOR 10 SECONDS.</p>
+                </div>
+                <button class="buy-btn" onclick="buyPowerUp('slowTime', 75)">🪙 75</button>
+            </div>
+
+            <!-- Silent Gloves -->
+            <div class="shop-item">
+                <div class="item-icon">🛡️</div>
+                <div class="item-info">
+                    <h3>SILENT GLOVES</h3>
+                    <p>REDUCES NOISE CAUSED BY MOVING BONES.</p>
+                </div>
+                <button class="buy-btn" onclick="buyPowerUp('silentGloves', 100)">🪙 100</button>
+            </div>
+
+            <!-- Bone Magnet -->
+            <div class="shop-item">
+                <div class="item-icon">🧲</div>
+                <div class="item-info">
+                    <h3>BONE MAGNET</h3>
+                    <p>MAKES BONES EASIER TO CONTROL.</p>
+                </div>
+                <button class="buy-btn" onclick="buyPowerUp('boneMagnet', 125)">🪙 125</button>
+            </div>
+
+            <!-- Freeze Butch -->
+            <div class="shop-item">
+                <div class="item-icon">❄️</div>
+                <div class="item-info">
+                    <h3>FREEZE BUTCH</h3>
+                    <p>STOPS BUTCH'S WAKE METER FOR 8 SECONDS.</p>
+                </div>
+                <button class="buy-btn" onclick="buyPowerUp('freezeButch', 150)">🪙 150</button>
+            </div>
+        </div>
+    </div>
+</div>
 
   <!-- =========================
        JAVASCRIPT

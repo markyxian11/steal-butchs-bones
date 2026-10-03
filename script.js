@@ -2,6 +2,22 @@
    STEAL BUTCH'S BONES
    ========================================================= */
 
+// --- POWER-UP SYSTEM VARIABLES ---
+let coins = 99999; // Starting coins for testing
+let activePowerUps = {
+    slowTime: false,
+    silentGloves: false,
+    boneMagnet: false,
+    freezeButch: false
+};
+
+let powerUpInventory = {
+    sleepSpray: 0,
+    slowTime: 0,
+    silentGloves: 0,
+    boneMagnet: 0,
+    freezeButch: 0
+};
 
 /* =========================
    DIFFICULTY
@@ -1013,6 +1029,9 @@ function startGame(player) {
 
     toggleAchievements(false);
 
+    // Reset Power-Ups for new game
+    activePowerUps = { slowTime: false, silentGloves: false, boneMagnet: false, freezeButch: false };
+
 
     arena
         .querySelectorAll(".bone")
@@ -1088,6 +1107,7 @@ function startGame(player) {
     updateWake();
 
     updateCombo();
+    updateInventoryUI();
 
 
     clearInterval(state.timer);
@@ -1337,6 +1357,10 @@ function grab(event, element) {
    MOVE BONE
    ========================= */
 
+/* =========================
+   MOVE BONE
+   ========================= */
+
 function move(event) {
     const drag = state.drag;
     if (!drag || state.over) return;
@@ -1344,10 +1368,7 @@ function move(event) {
     const now = performance.now();
     const dt = Math.max(now - drag.lt, 1);
  
-    /* speed per event (no 'control' multiplier) */
-    const speed =
-        Math.hypot(event.clientX - drag.lx, event.clientY - drag.ly) / dt;
- 
+    const speed = Math.hypot(event.clientX - drag.lx, event.clientY - drag.ly) / dt;
     drag.maxSpeed = Math.max(drag.maxSpeed, speed);
     state.currentDragMaxSpeed = Math.max(state.currentDragMaxSpeed, speed);
  
@@ -1355,31 +1376,55 @@ function move(event) {
     drag.ly = event.clientY;
     drag.lt = now;
  
-    /* FAST MOVEMENT = NOISE (added on every mouse event; only 'risk' sets the bone difference) */
     if (speed > SAFE_SPEED) {
-        const noise =
-            (speed - SAFE_SPEED) *
-            MOVE_GAIN *
-            state.cfg.sensitivity *
-            drag.risk *
-            10;
+        let noise = (speed - SAFE_SPEED) * MOVE_GAIN * state.cfg.sensitivity * drag.risk * 10;
+        
+        // --- POWER-UP: SILENT GLOVES (100% Silent) ---
+        if (activePowerUps.silentGloves) {
+            noise = 0; 
+        }
+
         addWake(noise);
         state.currentDragWake += noise;
     }
  
     const arenaRect = arena.getBoundingClientRect();
+    const basketRect = basket.getBoundingClientRect(); 
     const targetX = event.clientX - arenaRect.left - drag.dx;
     const targetY = event.clientY - arenaRect.top - drag.dy;
  
-    /* GOLD BONE = HEAVY (lag applied per event) */
     const follow = drag.type === "gold" ? 0.72 : 1;
- 
     let x = drag.el.offsetLeft + (targetX - drag.el.offsetLeft) * follow;
     let y = drag.el.offsetTop + (targetY - drag.el.offsetTop) * follow;
  
-    /* BLUE BONE = SLIPPERY (unchanged) */
+    // Keep blue bones slippery normally
     if (drag.type === "blue") {
         x += Math.sin(now / 75) * 1.2;
+    }
+ 
+    // --- POWER-UP: BONE MAGNET (Pulls bones to hover over the basket) ---
+    if (activePowerUps.boneMagnet) {
+        const basketCenterX = basketRect.left - arenaRect.left + (basketRect.width / 2);
+        const basketCenterY = basketRect.top - arenaRect.top + (basketRect.height / 2);
+        
+        // 1. Pull the dragged bone slightly
+        x += (basketCenterX - (drag.el.offsetWidth / 2) - x) * 0.08; 
+        y += (basketCenterY - (drag.el.offsetHeight / 2) - y) * 0.08;
+
+        // 2. Visually pull the identical bones to hover at the basket
+        const allBones = arena.querySelectorAll('.bone');
+        allBones.forEach(otherBone => {
+            if (otherBone !== drag.el && otherBone.dataset.type === drag.type) {
+                let otherX = otherBone.offsetLeft;
+                let otherY = otherBone.offsetTop;
+                
+                otherX += (basketCenterX - (otherBone.offsetWidth / 2) - otherX) * 0.04;
+                otherY += (basketCenterY - (otherBone.offsetHeight / 2) - otherY) * 0.04;
+                
+                otherBone.style.left = `${otherX}px`;
+                otherBone.style.top = `${otherY}px`;
+            }
+        });
     }
  
     x = Math.min(Math.max(x, 0), arenaRect.width - drag.el.offsetWidth);
@@ -1395,126 +1440,97 @@ function move(event) {
    ========================= */
 
 function drop() {
+    const drag = state.drag;
+    if (!drag) return;
 
-    const drag =
-        state.drag;
+    drag.el.classList.remove("drag");
+    drag.el.onpointermove = null;
+    drag.el.onpointerup = null;
+    drag.el.onpointercancel = null;
 
-
-    if (!drag) {
-        return;
+    if (drag.el.hasPointerCapture?.(drag.pointerId)) {
+        try { drag.el.releasePointerCapture(drag.pointerId); } catch {}
     }
 
-
-    drag.el.classList.remove(
-        "drag"
-    );
-
-
-    drag.el.onpointermove =
-        null;
-
-    drag.el.onpointerup =
-        null;
-
-    drag.el.onpointercancel =
-        null;
-
-
-    if (
-        drag.el.hasPointerCapture?.(
-            drag.pointerId
-        )
-    ) {
-
-        try {
-
-            drag.el.releasePointerCapture(
-                drag.pointerId
-            );
-
-        } catch {}
-
-    }
-
+    // Save the type we were dragging before clearing the state
+    const draggedType = drag.type; 
 
     state.drag = null;
+    if (state.over) return;
 
+    const boneRect = drag.el.getBoundingClientRect();
+    const basketRect = basket.getBoundingClientRect();
 
-    if (state.over) {
-        return;
-    }
+    const centerX = boneRect.left + boneRect.width / 2;
+    const centerY = boneRect.top + boneRect.height / 2;
 
-
-    const boneRect =
-        drag.el.getBoundingClientRect();
-
-
-    const basketRect =
-        basket.getBoundingClientRect();
-
-
-    const centerX =
-        boneRect.left +
-        boneRect.width / 2;
-
-
-    const centerY =
-        boneRect.top +
-        boneRect.height / 2;
-
+    // --- POWER-UP: BONE MAGNET ---
+    let magnetOffset = activePowerUps.boneMagnet ? 150 : 0;
 
     const insideBasket =
-        centerX > basketRect.left &&
-        centerX < basketRect.right &&
-        centerY > basketRect.top &&
-        centerY < basketRect.bottom;
+        centerX > (basketRect.left - magnetOffset) &&
+        centerX < (basketRect.right + magnetOffset) &&
+        centerY > (basketRect.top - magnetOffset) &&
+        centerY < (basketRect.bottom + magnetOffset);
 
-
-        if (insideBasket) {
-
-        /* CARD CHECK: is this the right bone for the card? */
-        if (state.mode === "cards" && !Cards.accept(drag.type)) {
-
-            Cards.reject(drag.el);   // bone goes back to the bowl, Butch gets louder
-
-            breakCombo();            // wrong bone breaks the combo
-
-            return;                  // stop here, no points for a wrong bone
+    if (insideBasket) {
+        if (state.mode === "cards" && typeof Cards !== 'undefined' && !Cards.accept(draggedType)) {
+            Cards.reject(drag.el); 
+            breakCombo();          
+            return;                
         }
 
+        // 1. Score the bone you were holding
+        handleSuccessfulSteal(drag, boneRect, basketRect);
 
-        handleSuccessfulSteal(
-            drag,
-            boneRect,
-            basketRect
-        );
+        // 2. Score the extra bones that were hovering over the basket!
+        if (activePowerUps.boneMagnet) {
+            const allBones = arena.querySelectorAll('.bone');
+            allBones.forEach(otherBone => {
+                // Only collect bones that matched the type you just dropped
+                if (otherBone.dataset.type === draggedType) {
+                    const otherRect = otherBone.getBoundingClientRect();
+                    const otherCX = otherRect.left + otherRect.width / 2;
+                    const otherCY = otherRect.top + otherRect.height / 2;
+
+                    const otherInside =
+                        otherCX > (basketRect.left - magnetOffset) &&
+                        otherCX < (basketRect.right + magnetOffset) &&
+                        otherCY > (basketRect.top - magnetOffset) &&
+                        otherCY < (basketRect.bottom + magnetOffset);
+
+                    if (otherInside) {
+                        let fakeDrag = {
+                            el: otherBone,
+                            type: otherBone.dataset.type,
+                            risk: BONES[otherBone.dataset.type].risk
+                        };
+                        
+                        if (state.mode === "cards" && typeof Cards !== 'undefined' && !Cards.accept(fakeDrag.type)) {
+                            Cards.reject(fakeDrag.el);
+                            breakCombo();
+                        } else {
+                            handleSuccessfulSteal(fakeDrag, otherRect, basketRect);
+                        }
+                    }
+                }
+            });
+        }
 
     } else {
-
         /* MISSED BASKET */
+        let missNoise = 3 * state.cfg.sensitivity * drag.risk;
 
-        addWake(
-            3 *
-            state.cfg.sensitivity *
-            drag.risk
-        );
+        // --- POWER-UP: SILENT GLOVES ---
+        if (activePowerUps.silentGloves) {
+            missNoise = 0;
+        }
 
-
+        addWake(missNoise);
         breakCombo();
-
-
         Sound.play("miss");
-
-
-        showFloatingText(
-            "MISS! +NOISE!",
-            null,
-            null,
-            "bad"
-        );
-
+        showFloatingText("MISS! +NOISE!", null, null, "bad");
     }
-
 }
 
 
@@ -1839,6 +1855,11 @@ function addWake(amount) {
         return;
     }
 
+    // --- POWER-UP: FREEZE BUTCH ---
+    if (activePowerUps.freezeButch && amount > 0) {
+        return;
+    }
+
 
     const previous =
         state.wake;
@@ -1886,119 +1907,52 @@ function addWake(amount) {
    ========================= */
 
 function tick() {
+    if (state.over || state.paused) return;
 
-    if (state.over) {
-        return;
-    }
-
-    if (state.paused) { 
-        return;
-    }
-
-    const now =
-        performance.now();
-
-
-    const dt =
-        (now - state.last) /
-        1000;
-
-
+    const now = performance.now();
+    const dt = (now - state.last) / 1000;
     state.last = now;
 
-
-    state.time -= dt;
-
+    // --- POWER-UP: SLOW TIME ---
+    let timeModifier = activePowerUps.slowTime ? 0.5 : 1;
+    state.time -= (dt * timeModifier);
 
     /* HOLDING BONE CREATES NOISE */
-
     if (state.drag) {
-
-        const holdNoise =
-            HOLD_GAIN *
-            state.cfg.sensitivity *
-            state.drag.risk *
-            dt;
-
-
-        addWake(
-            holdNoise
-        );
-
-
-        state.currentDragWake +=
-            holdNoise;
-
-    } else {
-
-        /* BUTCH CALMS DOWN */
-
-        addWake(
-            -CALM_RATE * dt
-        );
-
-    }
-
-
-    /* COMBO TIMER */
-
-    if (state.combo > 0) {
-
-        state.comboTimer -= dt;
-
-
-        if (
-            state.comboTimer <= 0
-        ) {
-
-            breakCombo();
-
+        let holdNoise = HOLD_GAIN * state.cfg.sensitivity * state.drag.risk * dt;
+        
+        // --- POWER-UP: SILENT GLOVES (100% Silent) ---
+        if (activePowerUps.silentGloves) {
+            holdNoise = 0;
         }
 
+        addWake(holdNoise);
+        state.currentDragWake += holdNoise;
+    } else {
+        /* BUTCH CALMS DOWN */
+        addWake(-CALM_RATE * dt);
     }
 
+    /* COMBO TIMER */
+    if (state.combo > 0) {
+        state.comboTimer -= dt;
+        if (state.comboTimer <= 0) breakCombo();
+    }
 
     /* TIME UP */
-
     if (state.time <= 0) {
-
         state.time = 0;
-
         updateHud();
-
-        endGame(
-            false,
-            "Time's up!"
-        );
-
+        endGame(false, "Time's up!");
         return;
-
     }
 
-
-    /* LAST 10 SECOND TICK */
-
-    const seconds =
-        Math.ceil(state.time);
-
-
-    if (
-        seconds <= 10 &&
-        seconds !== state.sec
-    ) {
-
-        Sound.play("tick");
-
-    }
-
-
+    const seconds = Math.ceil(state.time);
+    if (seconds <= 10 && seconds !== state.sec) Sound.play("tick");
+    
     state.sec = seconds;
-
-
     updateHud();
-
     updateCombo();
-
 }
 
 
@@ -2663,3 +2617,106 @@ $("achievementClose")
 renderAchievements();
 
 introPlay();
+
+/* =========================================================
+   🛒 POWER-UP SYSTEM (SHOP & INVENTORY FUNCTIONS)
+   ========================================================= */
+
+const shopModal = document.getElementById('powerup-shop-modal');
+const closeShopBtn = document.getElementById('close-shop-btn');
+const shopCoinCount = document.getElementById('shop-coin-count');
+
+function updateCoinDisplay() {
+    if (shopCoinCount) {
+        shopCoinCount.innerText = coins; 
+    }
+}
+
+window.openShop = function() {
+    if (shopModal) {
+        shopModal.classList.remove('hidden');
+        updateCoinDisplay();
+    }
+};
+
+if (closeShopBtn) {
+    closeShopBtn.addEventListener('click', () => {
+        shopModal.classList.add('hidden');
+    });
+}
+
+window.buyPowerUp = function(powerUpType, cost) {
+    if (coins >= cost) {
+        coins -= cost; 
+        updateCoinDisplay(); 
+        powerUpInventory[powerUpType]++;
+        updateInventoryUI();
+    } else {
+        alert("Not enough coins!");
+    }
+};
+
+window.usePowerUp = function(type) {
+    if (!state || state.over) return; 
+
+    if (powerUpInventory[type] > 0) {
+        powerUpInventory[type]--; 
+        updateInventoryUI();      
+        activatePowerUp(type);    
+        showFloatingText("POWER-UP ACTIVATED!", null, null, "perfect");
+    } else {
+        console.log("You don't have any of this power-up!");
+    }
+};
+
+function updateInventoryUI() {
+    const qtySleep = document.getElementById('qty-sleep');
+    const qtySlow = document.getElementById('qty-slow');
+    const qtyGloves = document.getElementById('qty-gloves');
+    const qtyMagnet = document.getElementById('qty-magnet');
+    const qtyFreeze = document.getElementById('qty-freeze');
+
+    if (qtySleep) qtySleep.innerText = powerUpInventory.sleepSpray;
+    if (qtySlow) qtySlow.innerText = powerUpInventory.slowTime;
+    if (qtyGloves) qtyGloves.innerText = powerUpInventory.silentGloves;
+    if (qtyMagnet) qtyMagnet.innerText = powerUpInventory.boneMagnet;
+    if (qtyFreeze) qtyFreeze.innerText = powerUpInventory.freezeButch;
+}
+
+function activatePowerUp(type) {
+    switch(type) {
+        case 'sleepSpray':
+            // Instantly lower wake meter by 40%
+            if (state && !state.over) {
+                state.wake = Math.max(0, state.wake - 40);
+                updateWake(); 
+                showFloatingText("-40% WAKE!", null, null, "perfect");
+            }
+            break;
+            
+        case 'slowTime':
+            activePowerUps.slowTime = true;
+            showFloatingText("TIME SLOWED!", null, null, "perfect");
+            setTimeout(() => { activePowerUps.slowTime = false; }, 10000); // Lasts 10 seconds
+            break;
+            
+        case 'silentGloves':
+            activePowerUps.silentGloves = true;
+            showFloatingText("100% SILENT!", null, null, "perfect");
+            setTimeout(() => { activePowerUps.silentGloves = false; }, 5000); // Lasts 5 seconds
+            break;
+            
+        case 'boneMagnet':
+            activePowerUps.boneMagnet = true;
+            showFloatingText("MAGNET ACTIVE!", null, null, "perfect");
+            // Changed from 10000 to 3000 (3 seconds)
+            setTimeout(() => { activePowerUps.boneMagnet = false; }, 3000); 
+            break;
+            
+        case 'freezeButch':
+            activePowerUps.freezeButch = true;
+            showFloatingText("BUTCH FROZEN!", null, null, "perfect");
+            setTimeout(() => { activePowerUps.freezeButch = false; }, 8000); // Lasts 8 seconds
+            break;
+    }
+}
