@@ -194,11 +194,23 @@
 
       <!-- IN-GAME POWER-UP INVENTORY -->
     <div id="powerup-inventory" class="powerup-inventory">
-      <button onclick="usePowerUp('sleepSpray')" class="inv-btn" title="Sleep Spray">💤 <span id="qty-sleep">0</span></button>
-      <button onclick="usePowerUp('slowTime')" class="inv-btn" title="Slow Time">🐌 <span id="qty-slow">0</span></button>
-      <button onclick="usePowerUp('silentGloves')" class="inv-btn" title="Silent Gloves">🛡️ <span id="qty-gloves">0</span></button>
-      <button onclick="usePowerUp('boneMagnet')" class="inv-btn" title="Bone Magnet">🧲 <span id="qty-magnet">0</span></button>
-      <button onclick="usePowerUp('freezeButch')" class="inv-btn" title="Freeze Butch">❄️ <span id="qty-freeze">0</span></button>
+      <div id="powerup-inventory" class="powerup-inventory">
+  <button onclick="usePowerUp('sleepSpray')" class="inv-btn" title="Sleep Spray">
+    <img src="images/powerups/sleep_spray.png" alt="Sleep Spray"> <span id="qty-sleep">0</span>
+  </button>
+  <button onclick="usePowerUp('slowTime')" class="inv-btn" title="Slow Time">
+    <img src="images/powerups/slow_time.png" alt="Slow Time"> <span id="qty-slow">0</span>
+  </button>
+  <button onclick="usePowerUp('silentGloves')" class="inv-btn" title="Silent Gloves">
+    <img src="images/powerups/silent_gloves.png" alt="Silent Gloves"> <span id="qty-gloves">0</span>
+  </button>
+  <button onclick="usePowerUp('boneMagnet')" class="inv-btn" title="Bone Magnet">
+    <img src="images/powerups/bone_magnet.png" alt="Bone Magnet"> <span id="qty-magnet">0</span>
+  </button>
+  <button onclick="usePowerUp('freezeButch')" class="inv-btn" title="Freeze Butch">
+    <img src="images/powerups/freeze_butch.png" alt="Freeze Butch"> <span id="qty-freeze">0</span>
+  </button>
+</div>
     </div>
 
     </div>
@@ -382,7 +394,7 @@
         <div class="shop-items">
             <!-- Sleep Spray -->
             <div class="shop-item">
-                <div class="item-icon">💤</div>
+                <div class="item-icon"><img src="images/powerups/sleep_spray.png" alt="Sleep Spray"></div>
                 <div class="item-info">
                     <h3>SLEEP SPRAY</h3>
                     <p>REDUCE BUTCH'S WAKE METER BY 20%.</p>
@@ -392,7 +404,7 @@
 
             <!-- Slow Time -->
             <div class="shop-item">
-                <div class="item-icon">🐌</div>
+                <div class="item-icon"><img src="images/powerups/slow_time.png" alt="Slow Time"></div>
                 <div class="item-info">
                     <h3>SLOW TIME</h3>
                     <p>SLOWS THE GAME TIMER FOR 10 SECONDS.</p>
@@ -402,7 +414,7 @@
 
             <!-- Silent Gloves -->
             <div class="shop-item">
-                <div class="item-icon">🛡️</div>
+                <div class="item-icon"><img src="images/powerups/silent_gloves.png" alt="Silent Gloves"></div>
                 <div class="item-info">
                     <h3>SILENT GLOVES</h3>
                     <p>REDUCES NOISE CAUSED BY MOVING BONES.</p>
@@ -412,7 +424,7 @@
 
             <!-- Bone Magnet -->
             <div class="shop-item">
-                <div class="item-icon">🧲</div>
+                <div class="item-icon"><img src="images/powerups/bone_magnet.png" alt="Bone Magnet"></div>
                 <div class="item-info">
                     <h3>BONE MAGNET</h3>
                     <p>MAKES BONES EASIER TO CONTROL.</p>
@@ -422,7 +434,7 @@
 
             <!-- Freeze Butch -->
             <div class="shop-item">
-                <div class="item-icon">❄️</div>
+                <div class="item-icon"><img src="images/powerups/freeze_butch.png" alt="Freeze Butch"></div>
                 <div class="item-info">
                     <h3>FREEZE BUTCH</h3>
                     <p>STOPS BUTCH'S WAKE METER FOR 8 SECONDS.</p>

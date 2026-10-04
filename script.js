@@ -1135,125 +1135,91 @@ function startGame(player) {
 
 function spawnBones() {
 
-    const arenaRect =
-        arena.getBoundingClientRect();
+    /* gumagamit ng offset values: parehong coordinate system ng left/top ng bones */
+    const bx = bowl.offsetLeft;
+    const by = bowl.offsetTop;
+    const bw = bowl.offsetWidth;
+    const bh = bowl.offsetHeight;
 
+    const shuffle = list => list.sort(() => Math.random() - 0.5);
 
-    const bowlRect =
-        bowl.getBoundingClientRect();
+    /*
+       Loob ng SVG bowl (dark navy oval):
+       gitna = (0.50, 0.45), ang laman ay mga y = 0.20 hanggang 0.70
+       [x, y] bilang fraction ng bowl
+    */
+    const SLOTS = [
+        [0.20, 0.34], [0.40, 0.34], [0.60, 0.34], [0.80, 0.34],
+        [0.20, 0.55], [0.40, 0.55], [0.60, 0.55], [0.80, 0.55]
+    ];
 
+    /* gold = malalaki, kaya sa gitnang columns at magkaibang row */
+    const goldSlots = [SLOTS[1], SLOTS[6]];
 
-    const slots = [];
-
-
-    for (let row = 0; row < 2; row++) {
-
-        for (let col = 0; col < 4; col++) {
-
-            slots.push([
-                col,
-                row
-            ]);
-
-        }
-
-    }
-
-
-    slots.sort(
-        () => Math.random() - 0.5
+    const others = shuffle(
+        SLOTS.filter(slot => !goldSlots.includes(slot))
     );
 
 
-    BONE_LIST.forEach(
-        (type, index) => {
+    BONE_LIST.forEach(type => {
 
-            const bone =
-                BONES[type];
+        const bone = BONES[type];
 
+        const [fx, fy] =
+            type === "gold"
+                ? goldSlots.pop()
+                : others.pop();
 
-            const element =
-                document.createElement("img");
-
-
-            element.src =
-                bone.img;
+        const targetX = bx + bw * fx;
+        const targetY = by + bh * fy;
 
 
-            element.alt =
-                bone.name;
+        const element = document.createElement("img");
+
+        element.src = bone.img;
+        element.alt = bone.name;
+        element.className = `bone bone-${type}`;
+        element.draggable = false;
+        element.dataset.type = type;
+        element.style.width = `${bone.width}px`;
 
 
-            element.className =
-                `bone bone-${type}`;
-
-
-            element.draggable = false;
-
-
-            element.dataset.type =
-                type;
-
-
-            element.style.width =
-                `${bone.width}px`;
-
-
-            const [col, row] =
-                slots[index];
-
-
-            const x =
-                bowlRect.left -
-                arenaRect.left +
-                20 +
-                col *
-                ((bowlRect.width - 100) / 3);
-
-
-            const y =
-                bowlRect.top -
-                arenaRect.top +
-                20 +
-                row * 44 +
-                Math.random() * 8;
-
+        /* i-center gamit ang AKTWAL na laki ng image */
+        const place = () => {
 
             element.style.left =
-                `${x}px`;
-
+                `${targetX - element.offsetWidth / 2}px`;
 
             element.style.top =
-                `${y}px`;
+                `${targetY - element.offsetHeight / 2}px`;
+
+        };
 
 
-            element.style.setProperty(
-                "--rotation",
-                `${Math.round(
-                    Math.random() * 40 - 20
-                )}deg`
-            );
+        arena.appendChild(element);
 
+        place();
 
-            element.addEventListener(
-                "pointerdown",
-                event =>
-                    grab(
-                        event,
-                        element
-                    )
-            );
-
-
-            arena.appendChild(
-                element
-            );
-
+        /* ulitin pag tapos mag-load ang image (para tama ang taas) */
+        if (!element.complete) {
+            element.addEventListener("load", place, { once: true });
         }
-    );
+
+
+        element.style.setProperty(
+            "--rotation",
+            `${Math.round(Math.random() * 30 - 15)}deg`
+        );
+
+
+        element.addEventListener(
+            "pointerdown",
+            event => grab(event, element)
+        );
+
+    });
 
 }
-
 
 /* =========================
    GRAB BONE
@@ -2720,3 +2686,74 @@ function activatePowerUp(type) {
             break;
     }
 }
+
+/* =========================
+   SVG BOWL (self-contained)
+   ========================= */
+
+function buildBowl() {
+
+    if (bowl.querySelector(".bowlSvg")) return;
+
+    Object.assign(bowl.style, {
+        background: "none",
+        border: "0",
+        boxShadow: "none",
+        borderRadius: "0"
+    });
+
+    bowl.insertAdjacentHTML("afterbegin", `
+      <svg class="bowlSvg" viewBox="0 0 400 130" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <radialGradient id="bowlInner" cx="50%" cy="35%" r="70%">
+            <stop offset="0%" stop-color="#2c448f"/>
+            <stop offset="100%" stop-color="#0f1b4d"/>
+          </radialGradient>
+          <linearGradient id="bowlBody" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#22377e"/>
+            <stop offset="100%" stop-color="#0c163d"/>
+          </linearGradient>
+          <linearGradient id="bowlRim" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffe27a"/>
+            <stop offset="100%" stop-color="#f2a91e"/>
+          </linearGradient>
+        </defs>
+
+        <ellipse cx="200" cy="116" rx="180" ry="11" fill="#0004"/>
+
+        <path d="M8 56 Q10 106 72 113 Q200 124 328 113 Q390 106 392 56 Z"
+              fill="url(#bowlBody)" stroke="#0c163d" stroke-width="4" stroke-linejoin="round"/>
+
+        <ellipse cx="200" cy="54" rx="194" ry="48" fill="url(#bowlRim)" stroke="#a85a0f" stroke-width="4"/>
+
+        <ellipse cx="200" cy="58" rx="170" ry="37" fill="url(#bowlInner)" stroke="#0c163d" stroke-width="3"/>
+
+        <path d="M44 52 Q200 12 356 52" fill="none" stroke="#0007" stroke-width="6" stroke-linecap="round"/>
+        <path d="M70 80 Q200 98 330 80" fill="none" stroke="#fff3" stroke-width="3" stroke-linecap="round"/>
+        <path d="M40 32 Q110 10 190 8" fill="none" stroke="#fff9" stroke-width="5" stroke-linecap="round"/>
+      </svg>
+    `);
+
+    Object.assign(bowl.querySelector(".bowlSvg").style, {
+        position: "absolute",
+        inset: "0",
+        width: "100%",
+        height: "100%",
+        pointerEvents: "none",
+        zIndex: "0"
+    });
+
+    const label = bowl.querySelector("span");
+
+    if (label) {
+        Object.assign(label.style, {
+            zIndex: "1",
+            bottom: "2px",
+            color: "#ffd34d",
+            webkitTextStroke: "3px #0c163d",
+            paintOrder: "stroke fill"
+        });
+    }
+}
+
+buildBowl();

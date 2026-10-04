@@ -1980,3 +1980,315 @@ label:has(input[name="gameMode"]){
 .inv-btn span {
     color: #e74c3c; /* Red number to show how many you have */
 }
+
+
+
+/* =========================
+   SVG BOWL
+   ========================= */
+
+#bowl {
+    background: none !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+}
+
+.bowlSvg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+#bowl span {
+    z-index: 1;
+    bottom: 2px;
+    color: #ffd34d;
+    font-size: 0.75rem;
+    -webkit-text-stroke: 3px #0c163d;
+    paint-order: stroke fill;
+}
+
+
+
+/* =========================
+   POWER-UP SHOP (improved + PNG icons)
+   ========================= */
+
+.shop-modal {
+    background: #14235acc;
+    backdrop-filter: blur(4px);
+    padding: 16px;
+}
+
+.shop-container {
+    display: flex;
+    flex-direction: column;
+
+    width: 520px;
+    max-width: 100%;
+    max-height: 90vh;
+    padding: 22px 24px 24px;
+
+    background: #fff9ee;
+    border: 5px solid #f2a91e;
+    border-radius: 24px;
+
+    font-family: "Luckiest Guy", cursive;
+    letter-spacing: 1.2px;
+    color: #14235a;
+
+    box-shadow:
+        0 0 0 5px #14235a,
+        0 12px 0 5px #0c163d,
+        0 25px 40px #0006;
+
+    animation: shopPop 0.3s ease;
+}
+
+@keyframes shopPop {
+    from { transform: scale(0.85); opacity: 0; }
+    to   { transform: scale(1);    opacity: 1; }
+}
+
+/* close button */
+.close-btn {
+    top: -18px;
+    right: -18px;
+    width: 42px;
+    height: 42px;
+
+    background: linear-gradient(180deg, #ff8a80, #e53935);
+    border: 3px solid #7a1515;
+    box-shadow: 0 4px 0 #7a1515, 0 6px 8px #0004;
+
+    font-family: "Luckiest Guy", cursive;
+    font-size: 22px;
+    line-height: 1;
+
+    transition: transform 0.1s, filter 0.15s;
+}
+
+.close-btn:hover {
+    filter: brightness(1.12);
+    transform: scale(1.08);
+}
+
+.close-btn:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 #7a1515;
+}
+
+/* header */
+.shop-header {
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.shop-header h2 {
+    margin: 0 0 10px;
+
+    color: #ffd34d;
+    font-size: 2rem;
+    line-height: 1.1;
+
+    -webkit-text-stroke: 5px #14235a;
+    paint-order: stroke fill;
+    text-shadow: 0 4px 0 #14235a;
+}
+
+.coin-display {
+    display: inline-block;
+    margin: 0;
+    padding: 6px 20px;
+
+    background: #14235a;
+    color: #ffd34d;
+    border: 3px solid #f2a91e;
+    border-radius: 20px;
+
+    font-size: 1.1rem;
+    font-weight: normal;
+    box-shadow: 0 4px 0 #0c163d;
+}
+
+.coin-display span {
+    color: #fff;
+}
+
+/* item list (scrolls inside the modal) */
+.shop-items {
+    flex: 1;
+    overflow-y: auto;
+    padding: 4px 6px 8px;
+}
+
+.shop-item {
+    gap: 12px;
+    margin-bottom: 12px;
+    padding: 12px 14px;
+
+    background: #f4e8d3;
+    border: 3px solid #d3bd94;
+    border-radius: 16px;
+
+    transition: transform 0.12s, border-color 0.15s, box-shadow 0.15s;
+}
+
+.shop-item:hover {
+    transform: translateY(-2px);
+    border-color: #14235a;
+    box-shadow: 0 5px 0 #14235a33;
+}
+
+/* icon badge: works with emoji OR <img> PNG */
+.item-icon {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+
+    width: 64px;
+    height: 64px;
+    margin-right: 0;
+    overflow: hidden;
+
+    background: #14235a;
+    border: 3px solid #f2a91e;
+    border-radius: 50%;
+
+    font-size: 28px;
+    box-shadow: inset 0 3px 0 #fff2, 0 3px 0 #0c163d;
+}
+
+.item-icon img {
+    width: 100%;
+    height: 100%;
+    padding: 8px;
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
+    filter: drop-shadow(0 2px 2px #0006);
+}
+
+.item-info h3 {
+    margin: 0 0 4px;
+    color: #14235a;
+    font-size: 1.05rem;
+    font-weight: normal;
+}
+
+.item-info p {
+    margin: 0;
+    color: #8a6a1f;
+    font-family: "Luckiest Guy", cursive;
+    font-size: 0.7rem;
+    font-weight: normal;
+    line-height: 1.35;
+}
+
+/* buy button = glossy gold, blue on hover */
+.buy-btn {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    min-width: 84px;
+    padding: 10px 14px;
+
+    background: linear-gradient(180deg, #ffe27a 0%, #ffc23d 50%, #f5a21a 100%);
+    color: #fff;
+    border: 3px solid #a85a0f;
+    border-radius: 14px;
+
+    font-family: "Luckiest Guy", cursive;
+    font-size: 1rem;
+    font-weight: normal;
+    white-space: nowrap;
+    letter-spacing: 1.2px;
+
+    -webkit-text-stroke: 3px #7a3d05;
+    paint-order: stroke fill;
+    text-shadow: 0 2px 0 #7a3d05;
+
+    box-shadow:
+        inset 0 3px 0 #fff8,
+        inset 0 -3px 0 #0002,
+        0 5px 0 #c77a12,
+        0 8px 8px #0003;
+
+    transition: filter 0.15s, transform 0.1s;
+}
+
+.buy-btn:hover {
+    border-color: #0b2a6b;
+    background: linear-gradient(180deg, #5aa2ff 0%, #2a6fe0 50%, #1a4fb8 100%);
+
+    -webkit-text-stroke-color: #0b1f55;
+    text-shadow: 0 2px 0 #0b1f55;
+
+    box-shadow:
+        inset 0 3px 0 #fff6,
+        inset 0 -3px 0 #0003,
+        0 5px 0 #0d3a8c,
+        0 8px 8px #0003;
+
+    filter: brightness(1.08);
+}
+
+.buy-btn:active {
+    transform: translateY(4px);
+    box-shadow:
+        inset 0 3px 0 #fff6,
+        inset 0 -3px 0 #0003,
+        0 1px 0 #0d3a8c;
+}
+
+/* mobile */
+@media (max-width: 480px) {
+
+    .shop-container {
+        padding: 18px 14px;
+    }
+
+    .shop-header h2 {
+        font-size: 1.6rem;
+    }
+
+    .shop-item {
+        flex-wrap: wrap;
+    }
+
+    .item-info {
+        flex: 1 1 140px;
+    }
+
+    .buy-btn {
+        width: 100%;
+    }
+}
+
+
+
+/* =========================
+   POWER-UP PNG ICONS
+   ========================= */
+
+.inv-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px 4px 8px;
+}
+
+.inv-btn img {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
+}
