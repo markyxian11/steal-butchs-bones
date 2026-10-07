@@ -3,7 +3,7 @@
    ========================================================= */
 
 // --- POWER-UP SYSTEM VARIABLES ---
-let coins = 99999; // Starting coins for testing
+let coins = 0; 
 let activePowerUps = {
     slowTime: false,
     silentGloves: false,
@@ -100,6 +100,12 @@ const BONE_LIST = [
 const SAFE_SPEED = 0.45;
 
 const MOVE_GAIN = 0.25;
+
+const MAGNET_PULL = 0.10;    // how fast same-color bones follow (0.05 slow, 0.2 fast)
+
+const MAGNET_RANGE = 2000;   // bones farther than this (in px) are not pulled
+
+const MAGNET_RING = 30;      // pulled bones gather in a small ring this far from your bone
 
 const HOLD_GAIN = 1.2;
 
@@ -1099,6 +1105,7 @@ function startGame(player) {
     spawnBones();
 
     state.mode = player.mode;
+    updateCoinDisplay();
     state.boneScore = 0;
     if (state.mode === "cards") Cards.start(); else Cards.stop();
 
@@ -1318,11 +1325,6 @@ function grab(event, element) {
 
 }
 
-
-/* =========================
-   MOVE BONE
-   ========================= */
-
 /* =========================
    MOVE BONE
    ========================= */
@@ -1368,36 +1370,46 @@ function move(event) {
         x += Math.sin(now / 75) * 1.2;
     }
  
-    // --- POWER-UP: BONE MAGNET (Pulls bones to hover over the basket) ---
-    if (activePowerUps.boneMagnet) {
-        const basketCenterX = basketRect.left - arenaRect.left + (basketRect.width / 2);
-        const basketCenterY = basketRect.top - arenaRect.top + (basketRect.height / 2);
-        
-        // 1. Pull the dragged bone slightly
-        x += (basketCenterX - (drag.el.offsetWidth / 2) - x) * 0.08; 
-        y += (basketCenterY - (drag.el.offsetHeight / 2) - y) * 0.08;
-
-        // 2. Visually pull the identical bones to hover at the basket
-        const allBones = arena.querySelectorAll('.bone');
-        allBones.forEach(otherBone => {
-            if (otherBone !== drag.el && otherBone.dataset.type === drag.type) {
-                let otherX = otherBone.offsetLeft;
-                let otherY = otherBone.offsetTop;
-                
-                otherX += (basketCenterX - (otherBone.offsetWidth / 2) - otherX) * 0.04;
-                otherY += (basketCenterY - (otherBone.offsetHeight / 2) - otherY) * 0.04;
-                
-                otherBone.style.left = `${otherX}px`;
-                otherBone.style.top = `${otherY}px`;
-            }
-        });
-    }
- 
     x = Math.min(Math.max(x, 0), arenaRect.width - drag.el.offsetWidth);
     y = Math.min(Math.max(y, 0), arenaRect.height - drag.el.offsetHeight);
  
     drag.el.style.left = `${x}px`;
     drag.el.style.top = `${y}px`;
+
+        // --- POWER-UP: BONE MAGNET (same-color bones are pulled toward the bone you hold) ---
+    if (activePowerUps.boneMagnet) {
+
+        const holdX = x + drag.el.offsetWidth / 2;
+        const holdY = y + drag.el.offsetHeight / 2;
+
+        const followers = [...arena.querySelectorAll(".bone")].filter(b =>
+            b !== drag.el &&
+            b.parentElement === arena &&
+            b.dataset.type === drag.type
+        );
+
+        followers.forEach((other, i) => {
+
+            const angle = (i / followers.length) * Math.PI * 2;
+
+            const targetX = holdX + Math.cos(angle) * MAGNET_RING - other.offsetWidth / 2;
+            const targetY = holdY + Math.sin(angle) * MAGNET_RING - other.offsetHeight / 2;
+
+            const dx = targetX - other.offsetLeft;
+            const dy = targetY - other.offsetTop;
+
+            if (Math.hypot(dx, dy) > MAGNET_RANGE) return;
+
+            let nx = other.offsetLeft + dx * MAGNET_PULL;
+            let ny = other.offsetTop + dy * MAGNET_PULL;
+
+            nx = Math.min(Math.max(nx, 0), arenaRect.width - other.offsetWidth);
+            ny = Math.min(Math.max(ny, 0), arenaRect.height - other.offsetHeight);
+
+            other.style.left = `${nx}px`;
+            other.style.top = `${ny}px`;
+        });
+    }
 }
 
 
@@ -1453,6 +1465,9 @@ function drop() {
         if (activePowerUps.boneMagnet) {
             const allBones = arena.querySelectorAll('.bone');
             allBones.forEach(otherBone => {
+
+                if (state.mode === "cards" && Cards.remaining() <= 0) return;
+
                 // Only collect bones that matched the type you just dropped
                 if (otherBone.dataset.type === draggedType) {
                     const otherRect = otherBone.getBoundingClientRect();
@@ -1667,6 +1682,9 @@ function handleSuccessfulSteal(
     state.bones++;
     state.boneScore += bone.points;
 
+    if (state.mode !== "cards") {
+        state.coinPot = (state.coinPot || 0) + COIN_REWARDS.bone[drag.type];
+    }
 
     Sound.play(
         "bone",
@@ -2221,6 +2239,8 @@ function endGame(
 
     Sound.snoreOff();
 
+    Coin.endGame(win);
+
     bgmStop();
 
 
@@ -2455,48 +2475,48 @@ $("restartBtn").addEventListener(
 
 
 /* =========================
-   QUIT
+   BACK TO MENU (Quit + results screen)
    ========================= */
 
-$("quitBtn").addEventListener(
+function backToMenu() {
+
+    clearInterval(state.timer);
+
+    state.over = true;
+
+    Cards.stop();
+
+    Sound.stopAll();
+
+    if (activeTrack !== "intro") {
+        bgmStop();
+        introPlay();
+    }
+
+    $("result").classList.add("hidden");
+
+    $("gameScreen").classList.add("hidden");
+
+    $("registerScreen").classList.remove("hidden");
+
+    $("formSuccess").textContent = "";
+
+    toggleAchievements(false);
+}
+
+
+$("quitBtn").addEventListener("click", backToMenu);
+
+
+$("menuBtn").addEventListener(
     "click",
     () => {
-        
-        clearInterval(
-            state.timer
-        );
 
+        Sound.init();
 
-        state.over = true;
+        Sound.play("menuClick");
 
-
-        Cards.stop();
-
-
-        Sound.stopAll();
-
-        bgmStop();
-
-        introPlay();
-
-
-        $("gameScreen")
-            .classList
-            .add("hidden");
-
-
-        $("registerScreen")
-            .classList
-            .remove("hidden");
-
-
-        $("formSuccess")
-            .textContent = "";
-
-
-        toggleAchievements(
-            false
-        );
+        backToMenu();
 
     }
 );
@@ -2594,7 +2614,13 @@ const shopCoinCount = document.getElementById('shop-coin-count');
 
 function updateCoinDisplay() {
     if (shopCoinCount) {
-        shopCoinCount.innerText = coins; 
+        shopCoinCount.innerText = coins;
+    }
+
+    const hudCoins = document.getElementById('hudCoins');
+    if (hudCoins) {
+        hudCoins.innerHTML =
+            '<img class="hud-coin" src="images/coins/coin.png" alt=""> ' + coins;
     }
 }
 
@@ -2611,27 +2637,82 @@ if (closeShopBtn) {
     });
 }
 
+function shopMessage(type, text, ok) {
+
+    const btn = document.querySelector(`.buy-btn[onclick*="'${type}'"]`);
+    const row = btn ? btn.closest('.shop-item') : null;
+
+    if (!row) return;
+
+    row.querySelectorAll('.shopMsg').forEach(m => m.remove());
+
+    const msg = document.createElement('div');
+    msg.className = 'shopMsg ' + (ok ? 'ok' : 'bad');
+    msg.textContent = text;
+    row.appendChild(msg);
+
+    if (!ok) {
+        row.classList.remove('shake');
+        void row.offsetWidth;         
+        row.classList.add('shake');
+    }
+
+    setTimeout(() => msg.remove(), 1500);
+}
+
+
 window.buyPowerUp = function(powerUpType, cost) {
+
+    Sound.init();
+
     if (coins >= cost) {
-        coins -= cost; 
-        updateCoinDisplay(); 
+
+        coins -= cost;
+        updateCoinDisplay();
+
         powerUpInventory[powerUpType]++;
         updateInventoryUI();
+
+        Sound.play("buy");
+
+        shopMessage(powerUpType, `BOUGHT ${POWERUP_NAMES[powerUpType]}!`, true);
+
     } else {
-        alert("Not enough coins!");
+
+        Sound.play("formError");
+
+        shopMessage(powerUpType, `NOT ENOUGH COINS! NEED ${cost - coins} MORE`, false);
+
     }
 };
 
+const POWERUP_NAMES = {
+    sleepSpray: "SLEEP SPRAY",
+    slowTime: "SLOW TIME",
+    silentGloves: "SILENT GLOVES",
+    boneMagnet: "BONE MAGNET",
+    freezeButch: "FREEZE BUTCH"
+};
+
+let lastNoPowerUp = 0;
+
 window.usePowerUp = function(type) {
-    if (!state || state.over) return; 
+    if (!state || state.over) return;
 
     if (powerUpInventory[type] > 0) {
-        powerUpInventory[type]--; 
-        updateInventoryUI();      
-        activatePowerUp(type);    
-        showFloatingText("POWER-UP ACTIVATED!", null, null, "perfect");
+
+        powerUpInventory[type]--;
+        updateInventoryUI();
+        activatePowerUp(type);   // shows its own message
+
     } else {
-        console.log("You don't have any of this power-up!");
+
+        // small cooldown so clicking fast doesn't stack messages
+        if (Date.now() - lastNoPowerUp < 700) return;
+        lastNoPowerUp = Date.now();
+
+        showFloatingText(`NO ${POWERUP_NAMES[type]} LEFT!`, null, null, "bad");
+        Sound.play("formError");
     }
 };
 
@@ -2652,11 +2733,11 @@ function updateInventoryUI() {
 function activatePowerUp(type) {
     switch(type) {
         case 'sleepSpray':
-            // Instantly lower wake meter by 40%
+            // Instantly lower wake meter by 20%
             if (state && !state.over) {
-                state.wake = Math.max(0, state.wake - 40);
+                state.wake = Math.max(0, state.wake - 20);
                 updateWake(); 
-                showFloatingText("-40% WAKE!", null, null, "perfect");
+                showFloatingText("-20% WAKE!", null, null, "perfect");
             }
             break;
             

@@ -8,6 +8,7 @@
 
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="cards.css">
+  <link rel="stylesheet" href="intro.css">
 
   <!-- Luckiest Guy font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -142,14 +143,42 @@
         role="status"
       ></p>
 
+      <div class="menuLinks">
+
       <button
-        type="button"
-        id="achievementBtn"
-        class="btn gray achievementButton"
-      >
-        🏆 Achievements
-        <button type="button" id="shopBtnStart" class="btn gray" onclick="openShop()">🛒 Power-Up Shop</button>
-      </button>
+          type="button"
+          id="achievementBtn"
+          class="btn gray achievementButton"
+        >
+          🏆 Achievements
+        </button>
+
+      <button
+          type="button"
+          id="shopBtnStart"
+          class="btn gray achievementButton"
+          onclick="openShop()"
+        >
+          🛒 Power-Up Shop
+        </button>
+
+      <button
+          type="button"
+          id="howBtn"
+          class="btn gray achievementButton"
+        >
+          ❓ How to Play
+        </button>
+
+      <button
+          type="button"
+          id="aboutBtn"
+          class="btn gray achievementButton"
+        >
+          👥 About Us
+        </button>
+
+      </div>
 
     </form>
 
@@ -191,27 +220,30 @@
         Combo
         <b id="hudCombo">x1</b>
       </div>
+      
+      <div class="comboHud">
+        Coins
+        <b id="hudCoins">0</b>
+      </div>
 
-      <!-- IN-GAME POWER-UP INVENTORY -->
-    <div id="powerup-inventory" class="powerup-inventory">
+            <!-- IN-GAME POWER-UP INVENTORY -->
       <div id="powerup-inventory" class="powerup-inventory">
-  <button onclick="usePowerUp('sleepSpray')" class="inv-btn" title="Sleep Spray">
-    <img src="images/powerups/sleep_spray.png" alt="Sleep Spray"> <span id="qty-sleep">0</span>
-  </button>
-  <button onclick="usePowerUp('slowTime')" class="inv-btn" title="Slow Time">
-    <img src="images/powerups/slow_time.png" alt="Slow Time"> <span id="qty-slow">0</span>
-  </button>
-  <button onclick="usePowerUp('silentGloves')" class="inv-btn" title="Silent Gloves">
-    <img src="images/powerups/silent_gloves.png" alt="Silent Gloves"> <span id="qty-gloves">0</span>
-  </button>
-  <button onclick="usePowerUp('boneMagnet')" class="inv-btn" title="Bone Magnet">
-    <img src="images/powerups/bone_magnet.png" alt="Bone Magnet"> <span id="qty-magnet">0</span>
-  </button>
-  <button onclick="usePowerUp('freezeButch')" class="inv-btn" title="Freeze Butch">
-    <img src="images/powerups/freeze_butch.png" alt="Freeze Butch"> <span id="qty-freeze">0</span>
-  </button>
-</div>
-    </div>
+        <button onclick="usePowerUp('sleepSpray')" class="inv-btn" title="Sleep Spray">
+          <img src="images/powerups/sleep_spray.png" alt="Sleep Spray"> <span id="qty-sleep">0</span>
+        </button>
+        <button onclick="usePowerUp('slowTime')" class="inv-btn" title="Slow Time">
+          <img src="images/powerups/slow_time.png" alt="Slow Time"> <span id="qty-slow">0</span>
+        </button>
+        <button onclick="usePowerUp('silentGloves')" class="inv-btn" title="Silent Gloves">
+          <img src="images/powerups/silent_gloves.png" alt="Silent Gloves"> <span id="qty-gloves">0</span>
+        </button>
+        <button onclick="usePowerUp('boneMagnet')" class="inv-btn" title="Bone Magnet">
+          <img src="images/powerups/bone_magnet.png" alt="Bone Magnet"> <span id="qty-magnet">0</span>
+        </button>
+        <button onclick="usePowerUp('freezeButch')" class="inv-btn" title="Freeze Butch">
+          <img src="images/powerups/freeze_butch.png" alt="Freeze Butch"> <span id="qty-freeze">0</span>
+        </button>
+      </div>
 
     </div>
 
@@ -319,7 +351,7 @@
       class="btn gray"
     >
       🏆 Achievements
-      <button type="button" id="shopBtnStart" class="btn gray" onclick="openShop()">🛒 Power-Up Shop</button>
+      <button type="button" id="shopBtnStartGame" class="btn gray" onclick="openShop()">🛒 Power-Up Shop</button>
     </button>
 
 
@@ -357,6 +389,13 @@
       Play Again
     </button>
 
+    <button
+      id="menuBtn"
+      class="btn gray"
+    >
+      Back to Menu
+    </button>
+
   </div>
 
 </div>
@@ -388,7 +427,7 @@
         
         <div class="shop-header">
             <h2>🛒 POWER-UP SHOP</h2>
-            <div class="coin-display">🪙 coins: <span id="shop-coin-count">99999</span></div>
+            <div class="coin-display"><img class="coin-icon" src="images/coins/coin.png" alt="Coins"> coins: <span id="shop-coin-count">0</span></div>
         </div>
 
         <div class="shop-items">
@@ -399,7 +438,7 @@
                     <h3>SLEEP SPRAY</h3>
                     <p>REDUCE BUTCH'S WAKE METER BY 20%.</p>
                 </div>
-                <button class="buy-btn" onclick="buyPowerUp('sleepSpray', 50)">🪙 50</button>
+                <button class="buy-btn" onclick="buyPowerUp('sleepSpray', 50)"><img class="coin-icon" src="images/coins/coin.png" alt=""> 50</button>
             </div>
 
             <!-- Slow Time -->
@@ -409,7 +448,7 @@
                     <h3>SLOW TIME</h3>
                     <p>SLOWS THE GAME TIMER FOR 10 SECONDS.</p>
                 </div>
-                <button class="buy-btn" onclick="buyPowerUp('slowTime', 75)">🪙 75</button>
+                <button class="buy-btn" onclick="buyPowerUp('slowTime', 75)"><img class="coin-icon" src="images/coins/coin.png" alt=""> 75</button>
             </div>
 
             <!-- Silent Gloves -->
@@ -419,7 +458,7 @@
                     <h3>SILENT GLOVES</h3>
                     <p>REDUCES NOISE CAUSED BY MOVING BONES.</p>
                 </div>
-                <button class="buy-btn" onclick="buyPowerUp('silentGloves', 100)">🪙 100</button>
+                <button class="buy-btn" onclick="buyPowerUp('silentGloves', 100)"><img class="coin-icon" src="images/coins/coin.png" alt=""> 100</button>
             </div>
 
             <!-- Bone Magnet -->
@@ -429,7 +468,7 @@
                     <h3>BONE MAGNET</h3>
                     <p>MAKES BONES EASIER TO CONTROL.</p>
                 </div>
-                <button class="buy-btn" onclick="buyPowerUp('boneMagnet', 125)">🪙 125</button>
+                <button class="buy-btn" onclick="buyPowerUp('boneMagnet', 125)"><img class="coin-icon" src="images/coins/coin.png" alt=""> 125</button>
             </div>
 
             <!-- Freeze Butch -->
@@ -439,7 +478,7 @@
                     <h3>FREEZE BUTCH</h3>
                     <p>STOPS BUTCH'S WAKE METER FOR 8 SECONDS.</p>
                 </div>
-                <button class="buy-btn" onclick="buyPowerUp('freezeButch', 150)">🪙 150</button>
+                <button class="buy-btn" onclick="buyPowerUp('freezeButch', 150)"><img class="coin-icon" src="images/coins/coin.png" alt=""> 150</button>
             </div>
         </div>
     </div>
@@ -458,5 +497,10 @@
   <!-- Main game logic -->
   <script src="script.js"></script>
 
+  <!-- Coin system -->
+  <script src="coins.js"></script>
+
+  <!-- Intro / About Us -->
+  <script src="intro.js"></script>
 </body>
 </html>

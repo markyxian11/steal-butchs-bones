@@ -148,11 +148,11 @@ const Cards = (() => {
       left[type]--;
       if (cur.got < cur.need) { render(); return; }
       done++;
+      Coin.cardReward(cur.key);      // coins + popup (shows "CARD DONE! +3s")
       state.paused = true;           // stop the clock while the card is celebrated
       state.time += CARD_BONUS_TIME;
       if (cur.type === null) state.score += BONUS_CARD_POINTS;
       updateHud(); render(); flash("good"); Sound.play("win");
-      setTimeout(() => showFloatingText(`CARD DONE! +${CARD_BONUS_TIME}s`, null, null, "good"), 700);
       const empty = leftTotal() === 0;
       if (empty) setTimeout(() => {  // bowl is empty: fresh bones
         if (state.over) return;
@@ -160,8 +160,9 @@ const Cards = (() => {
         state.time += BOWL_REFILL_TIME; updateHud();
         showFloatingText(`NEW BONES! +${BOWL_REFILL_TIME}s`, null, null, "perfect");
         Sound.play("bone", "gold");
-      }, 1600);
-      setTimeout(() => { if (!state.over) showPicker(); }, empty ? 2500 : 1700);
-    }
+      }, 2300);
+      setTimeout(() => { if (!state.over) showPicker(); }, empty ? 3100 : 2300);
+    },
+    remaining() { return cur ? cur.need - cur.got : 0; },
   };
 })();

@@ -664,6 +664,24 @@ const Sound = (() => {
 
             tone(1047, 0.4, "triangle", 0.2, 0.34);
 
+        },
+
+        coin: () => {
+
+            [1318, 1760].forEach((f, i) => tone(f, 0.12, "square", 0.08, i * 0.07));
+
+            tone(2093, 0.25, "triangle", 0.1, 0.16);
+
+        },
+
+        buy: () => {
+
+            tone(988, 0.08, "triangle", 0.16);
+
+            tone(1319, 0.14, "triangle", 0.18, 0.07);
+
+            tone(1760, 0.2, "triangle", 0.14, 0.15);
+
         }
 
     };

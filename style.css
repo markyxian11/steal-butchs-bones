@@ -2292,3 +2292,35 @@ label:has(input[name="gameMode"]){
     pointer-events: none;
     user-select: none;
 }
+
+/* ===== COINS ===== */
+.coin-icon{width:22px;height:22px;object-fit:contain;vertical-align:middle;margin-right:4px}
+.hud-coin{width:22px;height:22px;object-fit:contain;vertical-align:middle;margin-right:4px}
+
+/* ===== COIN REWARD POPUP ===== */
+.coinPop{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:300;text-align:center;pointer-events:none;animation:coinPopAnim 1.6s ease forwards}
+.coinPop.inArena{position:absolute;top:50%;z-index:30}
+
+.coinPopArt{position:relative;width:120px;height:96px;margin:0 auto}
+.coinGlow{position:absolute;left:50%;top:50%;width:130px;height:130px;border-radius:50%;background:radial-gradient(circle,#ffe27acc 0%,#f5c54255 45%,transparent 70%);animation:coinGlowPulse .9s ease-in-out infinite alternate}
+.coinPile{position:absolute;left:50%;top:50%;max-width:100px;max-height:84px;object-fit:contain;transform:translate(-50%,-50%);animation:coinPileDrop .5s cubic-bezier(.3,1.5,.5,1);filter:drop-shadow(0 4px 6px #0005)}
+
+.spark{position:absolute;width:16px;height:16px;background:#fff6c2;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);filter:drop-shadow(0 0 4px #f5c542);animation:coinTwinkle 1s ease-in-out infinite}
+
+.coinPopText{display:inline-flex;align-items:center;gap:6px;font-size:1.5rem;font-weight:bold;color:#f5c542;text-shadow:0 2px 0 #14235a,0 0 6px #14235a}
+.coinSpin{width:26px;height:26px;object-fit:contain}
+.coinPopLabel{font-size:.75rem;color:#fff;text-shadow:0 1px 3px #000}
+
+@keyframes coinPopAnim{0%{opacity:0;transform:translate(-50%,-45%)}12%{opacity:1;transform:translate(-50%,-50%)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-62%)}}
+@keyframes coinPileDrop{from{transform:translate(-50%,-170%) scale(.6);opacity:0}}
+@keyframes coinGlowPulse{from{opacity:.55;transform:translate(-50%,-50%) scale(.9)}to{opacity:1;transform:translate(-50%,-50%) scale(1.1)}}
+@keyframes coinTwinkle{0%,100%{transform:scale(0);opacity:0}50%{transform:scale(1.2) rotate(20deg);opacity:1}}
+
+/* ===== SHOP MESSAGES ===== */
+.shop-item{position:relative}
+.shopMsg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;border-radius:inherit;font-weight:bold;font-size:.95rem;text-align:center;padding:0 10px;z-index:5;pointer-events:none;animation:shopMsgIn .25s ease}
+.shopMsg.bad{background:#b3261ee6;color:#fff;text-shadow:0 2px 0 #5a0f0f}
+.shopMsg.ok{background:#2e7d32e6;color:#fff;text-shadow:0 2px 0 #123d14}
+.shop-item.shake{animation:shopShake .4s}
+@keyframes shopMsgIn{from{opacity:0;transform:scale(.96)}}
+@keyframes shopShake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
